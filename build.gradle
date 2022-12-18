@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.project'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = "1.9"
 
 configurations {
 	compileOnly {
@@ -40,9 +40,9 @@ dependencies {
 
 	// swagger
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+targetCompatibility = JavaVersion.VERSION_1_9

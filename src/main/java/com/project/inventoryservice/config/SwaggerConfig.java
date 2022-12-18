@@ -19,8 +19,8 @@ import java.util.Set;
 public class SwaggerConfig {
 
     private ApiInfo swaggerInfo() {
-        return new ApiInfoBuilder().title("IoT API")
-                .description("IoT API Docs").build();
+        return new ApiInfoBuilder().title("Inventroy Service")
+                .description("재고 관리 서비스입니다.").build();
     }
 
     @Bean
@@ -29,7 +29,7 @@ public class SwaggerConfig {
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .apiInfo(swaggerInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("com.nahwasa.iot.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.project.inventoryservice.api"))
                 .paths(PathSelectors.any())
                 .build()
                 .useDefaultResponseMessages(false);
