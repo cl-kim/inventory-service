@@ -28,4 +28,12 @@ public class Product {
         this.productUnit = productUnit;
     }
 
+    public Product update(Category category, String productName, String productUnit){
+        this.category = category;
+        this.productName = productName;
+        this.productUnit = productUnit;
+
+        return this;
+    }
+
 }

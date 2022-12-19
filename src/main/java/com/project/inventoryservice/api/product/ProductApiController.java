@@ -2,6 +2,7 @@ package com.project.inventoryservice.api.product;
 
 import com.project.inventoryservice.api.product.dto.ProductResponseDto;
 import com.project.inventoryservice.api.product.dto.ProductSaveRequestDto;
+import com.project.inventoryservice.api.product.dto.ProductUpdateRequestDto;
 import com.project.inventoryservice.domain.product.Category;
 import com.project.inventoryservice.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +33,7 @@ public class ProductApiController {
 
     @Operation(summary = "상품 리스트 조회", description = "상품 페이지 리스트을 조회합니다.")
     @GetMapping("/products")
-    public Page<ProductResponseDto> getProductList(Pageable pageable){
+    public Page<ProductResponseDto> getProductList(Pageable pageable) {
         return productService.getList(pageable);
     }
 
@@ -44,10 +46,21 @@ public class ProductApiController {
     @Operation(summary = "상품 저장")
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponseDto save(@RequestBody ProductSaveRequestDto requestDto){
+    public ProductResponseDto save(@RequestBody ProductSaveRequestDto requestDto) {
         return productService.save(requestDto);
     }
 
+    @Operation(summary = "상품 수정")
+    @PutMapping("/products/{productId}")
+    public ProductResponseDto update(@PathVariable Long productId, @RequestBody @Valid ProductUpdateRequestDto requestDto) {
+        return productService.update(productId, requestDto);
+    }
 
+    @Operation(summary = "상품 삭제")
+    @DeleteMapping("/products/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long productId) {
+        productService.delete(productId);
+    }
 
 }
