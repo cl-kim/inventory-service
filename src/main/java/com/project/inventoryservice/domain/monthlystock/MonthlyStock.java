@@ -1,4 +1,4 @@
-package com.project.inventoryservice.domain.stock;
+package com.project.inventoryservice.domain.monthlystock;
 
 import com.project.inventoryservice.domain.product.Product;
 import lombok.Getter;
@@ -10,19 +10,16 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Entity
-public class InStock {
+public class MonthlyStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private LocalDate inStockDate;
+    private LocalDate monthlyDate;
 
     private Integer quantity;
-
-    private String memo;
 
 }

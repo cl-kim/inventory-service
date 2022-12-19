@@ -10,13 +10,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 public class ProductUpdateRequestDto {
-
     @NotNull
     private Category category;
-
     @NotBlank
     private String productName;
 
     private String productUnit;
-
 }

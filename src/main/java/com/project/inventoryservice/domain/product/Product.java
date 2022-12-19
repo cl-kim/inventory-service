@@ -22,7 +22,8 @@ public class Product {
 
 
     @Builder
-    public Product(Category category, String productName, String productUnit){
+    public Product(Long id, Category category, String productName, String productUnit){
+        this.id = id;
         this.category = category;
         this.productName = productName;
         this.productUnit = productUnit;

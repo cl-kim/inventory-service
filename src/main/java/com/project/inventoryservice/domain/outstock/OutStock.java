@@ -1,4 +1,4 @@
-package com.project.inventoryservice.domain.stock;
+package com.project.inventoryservice.domain.outstock;
 
 import com.project.inventoryservice.domain.product.Product;
 import lombok.Getter;
