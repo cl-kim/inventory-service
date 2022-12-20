@@ -1,6 +1,7 @@
 package com.project.inventoryservice.domain.outstock;
 
 import com.project.inventoryservice.domain.product.Product;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,8 +24,30 @@ public class OutStock {
 
     private String customer;
 
+    private Long price;
+
     private Integer quantity;
 
     private String memo;
 
+    @Builder
+    public OutStock(Product product, LocalDate outStockDate, String customer,
+                    Long price, Integer quantity, String memo) {
+        this.product = product;
+        this.outStockDate = outStockDate;
+        this.customer = customer;
+        this.price = price;
+        this.quantity = quantity;
+        this.memo = memo;
+    }
+
+    public OutStock update(LocalDate outStockDate, String customer, Long price, Integer quantity, String memo){
+        this.outStockDate = outStockDate;
+        this.customer = customer;
+        this.price = price;
+        this.quantity = quantity;
+        this.memo = memo;
+
+        return this;
+    }
 }
