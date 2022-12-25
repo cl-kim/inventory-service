@@ -2,6 +2,7 @@ package com.project.inventoryservice.api.instock.dto;
 
 import com.project.inventoryservice.domain.instock.InStock;
 import com.project.inventoryservice.domain.product.Product;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +23,7 @@ public class InStockSaveRequestDto {
 
     private String memo;
 
+    @Builder
     public InStockSaveRequestDto(Long productId, LocalDate inStockDate, Integer quantity, String memo) {
         this.productId = productId;
         this.inStockDate = inStockDate;
