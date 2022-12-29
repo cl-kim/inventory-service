@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,9 @@ public class InStockApiController {
 
     @Operation(summary = "입고 내역 조회", description = "조건 검색 : 상품번호, 날짜")
     @GetMapping("/in-stock")
-    public Page<InStockResponseDto> getProductList(Pageable pageable, Long productId,
-                                                   LocalDate startDate, LocalDate endDate) {
+    public Page<InStockResponseDto> getProductList(Pageable pageable, @RequestParam(required = false) Long productId,
+                                  @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                  @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate endDate) {
         return inStockService.getList(pageable, productId, startDate, endDate);
     }
 

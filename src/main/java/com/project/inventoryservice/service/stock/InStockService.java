@@ -5,14 +5,19 @@ import com.project.inventoryservice.api.instock.dto.InStockSaveRequestDto;
 import com.project.inventoryservice.api.instock.dto.InStockUpdateRequestDto;
 import com.project.inventoryservice.domain.instock.InStock;
 import com.project.inventoryservice.domain.instock.InStockRepository;
+import com.project.inventoryservice.domain.product.Product;
+import com.project.inventoryservice.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -20,13 +25,20 @@ import java.time.LocalDate;
 public class InStockService {
     private final InStockRepository inStockRepository;
 
+    private final ProductRepository productRepository;
+
     public Page<InStockResponseDto> getList(Pageable pageable, Long ProductId, LocalDate startDate, LocalDate endDate) {
-        return inStockRepository.findPage(pageable, ProductId, startDate, endDate);
+        List<InStock> results = inStockRepository.findPage(pageable, ProductId, startDate, endDate);
+        List<InStockResponseDto> resultsDto = results.stream().map(InStockResponseDto::new).collect(Collectors.toList());
+        long count = inStockRepository.count();
+
+        return new PageImpl<>(resultsDto, pageable, count);
     }
 
     @Transactional
     public InStockResponseDto save(InStockSaveRequestDto requestDto) {
-        InStock entity = inStockRepository.save(requestDto.toEntity());
+        Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
+        InStock entity = inStockRepository.save(requestDto.toEntity(product));
 
         return new InStockResponseDto(entity);
     }
