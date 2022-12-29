@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,7 +38,7 @@ public class ProductApiController {
 
     @Operation(summary = "상품 조회", description = "상품 코드로 상품을 조회합니다.")
     @GetMapping("/products/{productId}")
-    public ProductResponseDto getProduct(@PathVariable Long productId) throws Exception {
+    public ProductResponseDto getProduct(@PathVariable Long productId){
         return productService.getProduct(productId);
     }
 
@@ -52,15 +51,14 @@ public class ProductApiController {
 
     @Operation(summary = "상품 수정")
     @PutMapping("/products/{productId}")
-    public ProductResponseDto update(@PathVariable Long productId, @RequestBody @Valid ProductUpdateRequestDto requestDto) {
+    public ProductResponseDto update(@PathVariable Long productId, @RequestBody ProductUpdateRequestDto requestDto) {
         return productService.update(productId, requestDto);
     }
 
-    @Operation(summary = "상품 삭제")
-    @DeleteMapping("/products/{productId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long productId) {
-        productService.delete(productId);
+    @Operation(summary = "상품 판매 상태 수정")
+    @PutMapping("/products/{productId}/{status}")
+    public Long updateStatus(@PathVariable Long productId, @PathVariable String status) {
+        return productService.updateStatus(productId, status);
     }
 
 }

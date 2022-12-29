@@ -14,25 +14,49 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Category category;
+    private String categoryCode;
+
+    private String productCode;
 
     private String productName;
 
     private String productUnit;
 
+    private Float amount;
+    private Integer price;
 
+    private String productStatus;
+
+    private String memo;
     @Builder
-    public Product(Long id, Category category, String productName, String productUnit){
+    public Product(Long id, String categoryCode, String productCode, String productName,
+                   String productUnit, Float amount, Integer price, String productStatus, String memo) {
         this.id = id;
-        this.category = category;
+        this.categoryCode = categoryCode;
+        this.productCode = productCode;
         this.productName = productName;
         this.productUnit = productUnit;
+        this.amount = amount;
+        this.price = price;
+        this.productStatus = productStatus;
+        this.memo = memo;
     }
 
-    public Product update(Category category, String productName, String productUnit){
-        this.category = category;
+    public Product update(String categoryCode, String productName,
+                          String productUnit, Float amount, Integer price, String productStatus, String memo){
+        this.categoryCode = categoryCode;
         this.productName = productName;
         this.productUnit = productUnit;
+        this.amount = amount;
+        this.price = price;
+        this.productStatus = productStatus;
+        this.memo = memo;
+
+        return this;
+    }
+
+    public Product updateStatus(String status){
+        this.productStatus = status;
 
         return this;
     }
