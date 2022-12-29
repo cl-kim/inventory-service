@@ -5,6 +5,8 @@ import com.project.inventoryservice.api.outstock.dto.OutStockSaveRequestDto;
 import com.project.inventoryservice.api.outstock.dto.OutStockUpdateRequestDto;
 import com.project.inventoryservice.domain.outstock.OutStock;
 import com.project.inventoryservice.domain.outstock.OutStockRepository;
+import com.project.inventoryservice.domain.product.Product;
+import com.project.inventoryservice.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,13 +22,16 @@ public class OutStockService {
 
     private final OutStockRepository outStockRepository;
 
+    private final ProductRepository productRepository;
+
     public Page<OutStockResponseDto> getList(Pageable pageable, Long outStockId, LocalDate startDate, LocalDate endDate) {
         return outStockRepository.findPage(pageable, outStockId, startDate, endDate);
     }
 
     @Transactional
     public OutStockResponseDto save(OutStockSaveRequestDto requestDto) {
-        OutStock entity = outStockRepository.save(requestDto.toEntity());
+        Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
+        OutStock entity = outStockRepository.save(requestDto.toEntity(product));
 
         return new OutStockResponseDto(entity);
     }

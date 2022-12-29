@@ -24,7 +24,7 @@ public class OutStock {
 
     private String customer;
 
-    private Long price;
+    private Integer price;
 
     private Integer quantity;
 
@@ -32,7 +32,7 @@ public class OutStock {
 
     @Builder
     public OutStock(Product product, LocalDate outStockDate, String customer,
-                    Long price, Integer quantity, String memo) {
+                    Integer price, Integer quantity, String memo) {
         this.product = product;
         this.outStockDate = outStockDate;
         this.customer = customer;
@@ -41,7 +41,7 @@ public class OutStock {
         this.memo = memo;
     }
 
-    public OutStock update(LocalDate outStockDate, String customer, Long price, Integer quantity, String memo){
+    public OutStock update(LocalDate outStockDate, String customer, Integer price, Integer quantity, String memo){
         this.outStockDate = outStockDate;
         this.customer = customer;
         this.price = price;

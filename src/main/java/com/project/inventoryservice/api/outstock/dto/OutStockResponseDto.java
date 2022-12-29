@@ -12,13 +12,19 @@ import java.time.LocalDate;
 public class OutStockResponseDto {
     private Long id;
 
+    private String categoryName;
+
     private Long productId;
+
+    private String productCode;
+
+    private String productName;
 
     private LocalDate outStockDate;
 
     private String customer;
 
-    private Long price;
+    private Integer price;
 
     private Integer quantity;
 
@@ -27,7 +33,10 @@ public class OutStockResponseDto {
     @Builder
     public OutStockResponseDto(OutStock entity) {
         this.id = entity.getId();
+        this.categoryName = entity.getProduct().getCategoryCode();
         this.productId =  entity.getProduct().getId();
+        this.productCode = entity.getProduct().getProductCode();
+        this.productName = entity.getProduct().getProductName();
         this.outStockDate = entity.getOutStockDate();
         this.customer = entity.getCustomer();
         this.price = entity.getPrice();
