@@ -10,6 +10,10 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class InStockUpdateRequestDto {
+
+    @Schema(description = "상품 id", required = true)
+    private Long productId;
+
     @Schema(description = "입고일", required = true)
     private LocalDate inStockDate;
 
@@ -20,7 +24,8 @@ public class InStockUpdateRequestDto {
     private String memo;
 
     @Builder
-    public InStockUpdateRequestDto(LocalDate inStockDate, Integer quantity, String memo) {
+    public InStockUpdateRequestDto(Long productId, LocalDate inStockDate, Integer quantity, String memo) {
+        this.productId = productId;
         this.inStockDate = inStockDate;
         this.quantity = quantity;
         this.memo = memo;

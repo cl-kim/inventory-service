@@ -26,7 +26,7 @@ public class InStockApiController {
     public Page<InStockResponseDto> getProductList(Pageable pageable, @RequestParam(required = false) Long productId,
                                   @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                   @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate endDate) {
-        return inStockService.getList(pageable, productId, startDate, endDate);
+        return inStockService.getPage(pageable, productId, startDate, endDate);
     }
 
     @Operation(summary = "입고 내역 저장")

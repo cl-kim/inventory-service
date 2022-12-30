@@ -34,7 +34,8 @@ public class InStock {
         this.memo = memo;
     }
 
-    public InStock update(LocalDate inStockDate, Integer quantity, String memo){
+    public InStock update(Product product, LocalDate inStockDate, Integer quantity, String memo){
+        this.product = product;
         this.inStockDate = inStockDate;
         this.quantity = quantity;
         this.memo = memo;

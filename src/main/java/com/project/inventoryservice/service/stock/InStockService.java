@@ -27,8 +27,8 @@ public class InStockService {
 
     private final ProductRepository productRepository;
 
-    public Page<InStockResponseDto> getList(Pageable pageable, Long ProductId, LocalDate startDate, LocalDate endDate) {
-        List<InStock> results = inStockRepository.findPage(pageable, ProductId, startDate, endDate);
+    public Page<InStockResponseDto> getPage(Pageable pageable, Long productId, LocalDate startDate, LocalDate endDate) {
+        List<InStock> results = inStockRepository.findPage(pageable, productId, startDate, endDate);
         List<InStockResponseDto> resultsDto = results.stream().map(InStockResponseDto::new).collect(Collectors.toList());
         long count = inStockRepository.count();
 
@@ -45,8 +45,9 @@ public class InStockService {
 
     @Transactional
     public InStockResponseDto update(Long inStockId, InStockUpdateRequestDto requestDto) {
+        Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
         InStock entity = findInStock(inStockId);
-        entity.update(requestDto.getInStockDate(), requestDto.getQuantity(), requestDto.getMemo());
+        entity.update(product, requestDto.getInStockDate(), requestDto.getQuantity(), requestDto.getMemo());
         return new InStockResponseDto(entity);
     }
 
