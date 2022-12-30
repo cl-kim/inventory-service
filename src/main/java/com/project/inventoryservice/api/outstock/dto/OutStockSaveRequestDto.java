@@ -17,13 +17,10 @@ public class OutStockSaveRequestDto {
     private Long productId;
     @Schema(description = "출고일", required = true)
     private LocalDate outStockDate;
-
     @Schema(description = "거래처")
     private String customer;
-
     @Schema(description = "출고가격", required = true)
     private Integer price;
-
     @Schema(description = "수량", required = true)
     private Integer quantity;
     @Schema(description = "비고")

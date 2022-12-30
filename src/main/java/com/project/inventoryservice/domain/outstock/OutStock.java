@@ -41,7 +41,8 @@ public class OutStock {
         this.memo = memo;
     }
 
-    public OutStock update(LocalDate outStockDate, String customer, Integer price, Integer quantity, String memo){
+    public OutStock update(Product product, LocalDate outStockDate, String customer, Integer price, Integer quantity, String memo){
+        this.product = product;
         this.outStockDate = outStockDate;
         this.customer = customer;
         this.price = price;

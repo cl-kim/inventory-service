@@ -9,12 +9,15 @@ import com.project.inventoryservice.domain.product.Product;
 import com.project.inventoryservice.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -24,8 +27,12 @@ public class OutStockService {
 
     private final ProductRepository productRepository;
 
-    public Page<OutStockResponseDto> getList(Pageable pageable, Long outStockId, LocalDate startDate, LocalDate endDate) {
-        return outStockRepository.findPage(pageable, outStockId, startDate, endDate);
+    public Page<OutStockResponseDto> getPage(Pageable pageable, Long productId, LocalDate startDate, LocalDate endDate) {
+        List<OutStock> results = outStockRepository.findPage(pageable, productId, startDate, endDate);
+        List<OutStockResponseDto> resultsDto = results.stream().map(OutStockResponseDto::new).collect(Collectors.toList());
+        long count = outStockRepository.count();
+
+        return new PageImpl<>(resultsDto, pageable, count);
     }
 
     @Transactional
@@ -38,8 +45,9 @@ public class OutStockService {
 
     @Transactional
     public OutStockResponseDto update(Long outStockId, OutStockUpdateRequestDto requestDto) {
+        Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
         OutStock entity = findInStock(outStockId);
-        entity.update(requestDto.getOutStockDate(), requestDto.getCustomer(), requestDto.getPrice(), requestDto.getQuantity(), requestDto.getMemo());
+        entity.update(product, requestDto.getOutStockDate(), requestDto.getCustomer(), requestDto.getPrice(), requestDto.getQuantity(), requestDto.getMemo());
         return new OutStockResponseDto(entity);
     }
 
