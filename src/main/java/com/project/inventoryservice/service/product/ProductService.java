@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public Page<ProductResponseDto> getList(Pageable pageable){
-        List<ProductResponseDto> results = productRepository.findAll(pageable).stream()
+    public Page<ProductResponseDto> getList(String categoryCode, Pageable pageable){
+        List<ProductResponseDto> results = productRepository.findProduct(categoryCode, pageable).stream()
                 .map(ProductResponseDto::new).collect(Collectors.toList());
         long total = productRepository.count();
         return new PageImpl<>(results, pageable, total);
