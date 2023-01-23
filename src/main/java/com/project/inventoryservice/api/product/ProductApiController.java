@@ -32,8 +32,8 @@ public class ProductApiController {
 
     @Operation(summary = "상품 리스트 조회", description = "상품 페이지 리스트을 조회합니다.")
     @GetMapping("/products")
-    public Page<ProductResponseDto> getProductList(Pageable pageable) {
-        return productService.getList(pageable);
+    public Page<ProductResponseDto> getProductList(@RequestParam(required = false)String categoryCode, Pageable pageable) {
+        return productService.getList(categoryCode, pageable);
     }
 
     @Operation(summary = "상품 조회", description = "상품 코드로 상품을 조회합니다.")
