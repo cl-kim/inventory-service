@@ -4,6 +4,7 @@ import com.project.inventoryservice.api.product.dto.ProductResponseDto;
 import com.project.inventoryservice.api.product.dto.ProductSaveRequestDto;
 import com.project.inventoryservice.api.product.dto.ProductUpdateRequestDto;
 import com.project.inventoryservice.domain.product.Category;
+import com.project.inventoryservice.domain.product.EnumMapperValue;
 import com.project.inventoryservice.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,9 @@ public class ProductApiController {
 
     @Operation(summary = "카테고리 조회", description = "카테고리 명 리스트을 조회합니다.")
     @GetMapping("/categories")
-    public List<String> getCategories() {
+    public List<EnumMapperValue> getCategories() {
         return Arrays.stream(Category.values())
-                .map(Category::getName)
+                .map(EnumMapperValue::new)
                 .collect(Collectors.toList());
     }
 

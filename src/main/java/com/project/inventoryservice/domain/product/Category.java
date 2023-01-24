@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum Category {
+public enum Category implements EnumMapperType {
     DETERGENT("00", "세제"),
     FRESHENER("01","방향제"),
     POLISH("02","광택제"),
@@ -17,6 +17,8 @@ public enum Category {
     private final String key;
     private final String name;
 
+
+
     public static Category findByKey(String key) {
         return Arrays.stream(Category.values()).filter(c -> c.getKey().equals(key)).findAny().orElse(null);
     }
@@ -25,4 +27,13 @@ public enum Category {
         return Arrays.stream(Category.values()).filter(c -> c.getName().equals(name)).findAny().orElse(null);
     }
 
+    @Override
+    public String getKey() {
+        return key;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
 }
