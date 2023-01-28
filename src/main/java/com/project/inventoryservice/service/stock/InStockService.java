@@ -27,9 +27,11 @@ public class InStockService {
 
     private final ProductRepository productRepository;
 
-    public Page<InStockResponseDto> getPage(Pageable pageable, Long productId, LocalDate startDate, LocalDate endDate) {
-        List<InStock> results = inStockRepository.findPage(pageable, productId, startDate, endDate);
-        List<InStockResponseDto> resultsDto = results.stream().map(InStockResponseDto::new).collect(Collectors.toList());
+    public Page<InStockResponseDto> getPage(Pageable pageable, Long productId, String categoryCode, LocalDate startDate, LocalDate endDate) {
+        List<InStock> results = inStockRepository.findPage(pageable, productId, categoryCode, startDate, endDate);
+        List<InStockResponseDto> resultsDto = results.stream()
+                .map(InStockResponseDto::new)
+                .collect(Collectors.toList());
         long count = inStockRepository.count();
 
         return new PageImpl<>(resultsDto, pageable, count);

@@ -16,11 +16,12 @@ public class OutStockRepositoryImpl implements OutStockRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<OutStock> findPage(Pageable pageable, Long productId, LocalDate startDate, LocalDate endDate) {
+    public List<OutStock> findList(Pageable pageable, Long productId, String categoryCode, LocalDate startDate, LocalDate endDate) {
         return jpaQueryFactory.select(outStock)
                 .from(outStock)
                 .leftJoin(outStock.product, product)
                 .where(eqId(productId),
+                        eqCategoryCode(categoryCode),
                         betweenDate(startDate,endDate))
                 .orderBy(outStock.id.desc())
                 .offset(pageable.getOffset())
@@ -37,5 +38,9 @@ public class OutStockRepositoryImpl implements OutStockRepositoryCustom{
 
     private BooleanExpression eqId(Long productId){
         return productId == null ? null : outStock.product.id.eq(productId);
+    }
+
+    private BooleanExpression eqCategoryCode(String categoryCode){
+        return categoryCode == null ? null : outStock.product.categoryCode.eq(categoryCode);
     }
 }

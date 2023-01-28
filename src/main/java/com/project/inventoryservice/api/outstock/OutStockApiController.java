@@ -22,12 +22,13 @@ public class OutStockApiController {
 
     private final OutStockService outStockService;
 
-    @Operation(summary = "츨고 내역 조회", description = "조건 검색 : 상품번호, 날짜")
+    @Operation(summary = "츨고 내역 조회", description = "조건 검색 : 카테고리코드, 상품번호, 날짜 m")
     @GetMapping("/out-stock")
     public Page<OutStockResponseDto> getProductList(Pageable pageable, @RequestParam(required = false) Long productId,
+                                                    @RequestParam(required = false) String categoryCode,
                                                     @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                     @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate endDate) {
-        return outStockService.getPage(pageable, productId, startDate, endDate);
+        return outStockService.getPage(pageable, productId, categoryCode, startDate, endDate);
     }
 
     @Operation(summary = "출고 내역 저장")

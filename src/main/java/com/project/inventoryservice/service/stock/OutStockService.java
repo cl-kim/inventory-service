@@ -27,8 +27,8 @@ public class OutStockService {
 
     private final ProductRepository productRepository;
 
-    public Page<OutStockResponseDto> getPage(Pageable pageable, Long productId, LocalDate startDate, LocalDate endDate) {
-        List<OutStock> results = outStockRepository.findPage(pageable, productId, startDate, endDate);
+    public Page<OutStockResponseDto> getPage(Pageable pageable, Long productId, String categoryCode, LocalDate startDate, LocalDate endDate) {
+        List<OutStock> results = outStockRepository.findList(pageable, productId, categoryCode, startDate, endDate);
         List<OutStockResponseDto> resultsDto = results.stream().map(OutStockResponseDto::new).collect(Collectors.toList());
         long count = outStockRepository.count();
 

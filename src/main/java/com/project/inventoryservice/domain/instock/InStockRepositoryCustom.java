@@ -6,5 +6,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface InStockRepositoryCustom {
-    List<InStock> findPage(Pageable pageable, Long productId, LocalDate startDate, LocalDate endDate);
+    List<InStock> findPage(Pageable pageable, Long productId, String categoryCode, LocalDate startDate, LocalDate endDate);
 }
