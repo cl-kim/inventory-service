@@ -22,9 +22,15 @@ public class LiveStockApiController {
 
     @Operation(summary = "마감 처리", description = "해당 월을 마감처리합니다.")
     @PostMapping("/live-stock/end/{date}")
-    public Boolean saveMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) throws RuntimeException {
+    public Boolean saveMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date)  {
         return monthlyCheckService.saveMonthlyEnd(date);
     }
+    @Operation(summary = "최초 마감 처리", description = "최초 월 설정 시 전월 마감처리합니다.")
+    @PostMapping("/live-stock/firstend/{date}")
+    public Boolean saveFirstMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        return monthlyCheckService.saveFirstMonthlyEnd(date);
+    }
+
     @Operation(summary = "마감 처리 취소", description = "해당 월의 마감처리를 취소합니다.")
     @PutMapping("/live-stock/end-cancel/{date}")
     public Boolean cancelMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {

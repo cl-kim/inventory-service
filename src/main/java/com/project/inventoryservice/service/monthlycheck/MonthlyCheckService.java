@@ -18,17 +18,18 @@ public class MonthlyCheckService {
         return entity.getIsEnd();
     }
 
-    public Boolean saveMonthlyEnd(LocalDate date) throws RuntimeException {
+    public Boolean saveMonthlyEnd(LocalDate date) {
         LocalDate lastMonth = date.minusMonths(1L);
         if(!monthlyCheckRepository.findByEndMonth(lastMonth).isPresent()){
             throw new RuntimeException("전월 마감이 필요합니다.");
         }
+        saveEnd(date);
+        return true;
+    }
 
-        MonthlyCheck entity = MonthlyCheck.builder()
-                .endMonth(date)
-                .isEnd(true)
-                .build();
-        monthlyCheckRepository.save(entity);
+    public Boolean saveFirstMonthlyEnd(LocalDate date) {
+        LocalDate lastMonth = date.minusMonths(1L);
+        saveEnd(lastMonth);
         return true;
     }
 
@@ -36,6 +37,14 @@ public class MonthlyCheckService {
         MonthlyCheck entity =  monthlyCheckRepository.findByEndMonth(date).get();
         entity.updateEnd(false);
         return true;
+    }
+
+    public void saveEnd(LocalDate date){
+        MonthlyCheck entity = MonthlyCheck.builder()
+                .endMonth(date)
+                .isEnd(true)
+                .build();
+        monthlyCheckRepository.save(entity);
     }
 
 }
