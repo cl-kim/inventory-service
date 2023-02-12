@@ -5,10 +5,12 @@ import com.project.inventoryservice.domain.monthlycheck.MonthlyCheckRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class MonthlyCheckService {
     private final MonthlyCheckRepository monthlyCheckRepository;
 
