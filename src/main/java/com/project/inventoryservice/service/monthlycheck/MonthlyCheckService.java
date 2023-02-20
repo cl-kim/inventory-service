@@ -1,5 +1,7 @@
 package com.project.inventoryservice.service.monthlycheck;
 
+import com.project.inventoryservice.common.exception.BusinessException;
+import com.project.inventoryservice.common.exception.dto.ErrorCode;
 import com.project.inventoryservice.domain.monthlycheck.MonthlyCheck;
 import com.project.inventoryservice.domain.monthlycheck.MonthlyCheckRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +32,10 @@ public class MonthlyCheckService {
             if (monthlyCheckRepository.findByEndMonth(lastMonth).get().getIsEnd()) {
                 saveEnd(date);
             } else {
-                throw new RuntimeException("전월 마감이 필요합니다.");
+                throw new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE, "전월 마감이 필요합니다.");
             }
         } else {
-            throw new RuntimeException("전월 마감이 필요합니다.");
+            throw new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE,"전월 마감이 필요합니다.");
         }
         return true;
     }
@@ -55,7 +57,7 @@ public class MonthlyCheckService {
     @Transactional
     public void saveEnd(LocalDate date) {
         if(monthlyCheckRepository.findByEndMonth(date).isPresent()){
-            throw new RuntimeException("이미 마감된 월입니다.");
+            throw new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE, "이미 마감된 월입니다.");
         }
         MonthlyCheck entity = MonthlyCheck.builder()
                 .endMonth(date)

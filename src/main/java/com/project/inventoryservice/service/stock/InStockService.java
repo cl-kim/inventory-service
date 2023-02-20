@@ -3,6 +3,8 @@ package com.project.inventoryservice.service.stock;
 import com.project.inventoryservice.api.instock.dto.InStockResponseDto;
 import com.project.inventoryservice.api.instock.dto.InStockSaveRequestDto;
 import com.project.inventoryservice.api.instock.dto.InStockUpdateRequestDto;
+import com.project.inventoryservice.common.exception.BusinessException;
+import com.project.inventoryservice.common.exception.dto.ErrorCode;
 import com.project.inventoryservice.domain.instock.InStock;
 import com.project.inventoryservice.domain.instock.InStockRepository;
 import com.project.inventoryservice.domain.product.Product;
@@ -61,7 +63,7 @@ public class InStockService {
 
     private InStock findInStock(Long inStockId) {
         return inStockRepository.findById(inStockId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 내역을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE,"해당 내역을 찾을 수 없습니다."));
     }
 
 }
