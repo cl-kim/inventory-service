@@ -1,4 +1,4 @@
-package com.project.inventoryservice.domain.monthlystock;
+package com.project.inventoryservice.domain.monthlyInventory;
 
 import com.project.inventoryservice.domain.product.Product;
 import lombok.Getter;
@@ -10,10 +10,11 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Entity
-public class MonthlyStock {
+public class MonthlyInventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
