@@ -49,7 +49,7 @@ public class OutBoundService {
     public OutBoundResponseDto update(Long outStockId, OutBoundUpdateRequestDto requestDto) {
         Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
         OutBound entity = findInStock(outStockId);
-        entity.update(product, requestDto.getOutStockDate(), requestDto.getCustomer(), requestDto.getPrice(), requestDto.getQuantity(), requestDto.getMemo());
+        entity.update(product, requestDto.getOutBoundDate(), requestDto.getCustomer(), requestDto.getPrice(), requestDto.getQuantity(), requestDto.getMemo());
         return new OutBoundResponseDto(entity);
     }
 

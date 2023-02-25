@@ -51,7 +51,7 @@ public class InBoundService {
     public InBoundResponseDto update(Long inStockId, InBoundUpdateRequestDto requestDto) {
         Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
         InBound entity = findInStock(inStockId);
-        entity.update(product, requestDto.getInStockDate(), requestDto.getQuantity(), requestDto.getMemo());
+        entity.update(product, requestDto.getInBoundDate(), requestDto.getQuantity(), requestDto.getMemo());
         return new InBoundResponseDto(entity);
     }
 
