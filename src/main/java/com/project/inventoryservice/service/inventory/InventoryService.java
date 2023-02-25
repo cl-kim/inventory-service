@@ -1,4 +1,4 @@
-package com.project.inventoryservice.service.monthlycheck;
+package com.project.inventoryservice.service.inventory;
 
 import com.project.inventoryservice.common.exception.BusinessException;
 import com.project.inventoryservice.common.exception.dto.ErrorCode;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class MonthlyCheckService {
+public class InventoryService {
     private final MonthlyCheckRepository monthlyCheckRepository;
 
     public Boolean checkMonthlyEnd(LocalDate date) {
@@ -31,11 +31,12 @@ public class MonthlyCheckService {
             // 전월 마감이 true일때만 이번달 마감이 가능하다.
             if (monthlyCheckRepository.findByEndMonth(lastMonth).get().getIsEnd()) {
                 saveEnd(date);
+                saveMonthlyInventory(date);
             } else {
                 throw new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE, "전월 마감이 필요합니다.");
             }
         } else {
-            throw new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE,"전월 마감이 필요합니다.");
+            throw new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE, "전월 마감이 필요합니다.");
         }
         return true;
     }
@@ -54,7 +55,6 @@ public class MonthlyCheckService {
         return true;
     }
 
-    @Transactional
     public void saveEnd(LocalDate date) {
         if(monthlyCheckRepository.findByEndMonth(date).isPresent()){
             throw new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE, "이미 마감된 월입니다.");
@@ -64,6 +64,12 @@ public class MonthlyCheckService {
                 .isEnd(true)
                 .build();
         monthlyCheckRepository.save(entity);
+    }
+
+    @Transactional
+    public void saveMonthlyInventory(LocalDate date){
+        // 해당 날짜 재고 조회
+//        List<MonthlyInventory> list = monthlyService.find() ;
     }
 
 }

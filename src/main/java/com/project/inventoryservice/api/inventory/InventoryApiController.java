@@ -1,6 +1,6 @@
-package com.project.inventoryservice.api.livestock;
+package com.project.inventoryservice.api.inventory;
 
-import com.project.inventoryservice.service.monthlycheck.MonthlyCheckService;
+import com.project.inventoryservice.service.inventory.InventoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,30 +10,30 @@ import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
-public class LiveStockApiController {
+public class InventoryApiController {
 
-    private final MonthlyCheckService monthlyCheckService;
+    private final InventoryService inventoryService;
 
     @Operation(summary = "마감여부 조회", description = "각 월별 마감 여부를 조회합니다")
-    @GetMapping("/live-stock/check/{date}")
+    @GetMapping("/inventory/end/check/{date}")
     public Boolean checkMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return monthlyCheckService.checkMonthlyEnd(date);
+        return inventoryService.checkMonthlyEnd(date);
     }
 
     @Operation(summary = "마감 처리", description = "해당 월을 마감처리합니다.")
-    @PostMapping("/live-stock/end/{date}")
+    @PostMapping("/inventory/end/{date}")
     public Boolean saveMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date)  {
-        return monthlyCheckService.saveMonthlyEnd(date);
+        return inventoryService.saveMonthlyEnd(date);
     }
     @Operation(summary = "최초 마감 처리", description = "최초 월 설정 시 전월 마감처리합니다.")
-    @PostMapping("/live-stock/firstend/{date}")
+    @PostMapping("/inventory/end-first/{date}")
     public Boolean saveFirstMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return monthlyCheckService.saveFirstMonthlyEnd(date);
+        return inventoryService.saveFirstMonthlyEnd(date);
     }
 
     @Operation(summary = "마감 처리 취소", description = "해당 월의 마감처리를 취소합니다.")
-    @PutMapping("/live-stock/end-cancel/{date}")
+    @DeleteMapping("/inventory/end/{date}")
     public Boolean cancelMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return monthlyCheckService.cancelMonthlyEnd(date);
+        return inventoryService.cancelMonthlyEnd(date);
     }
 }
