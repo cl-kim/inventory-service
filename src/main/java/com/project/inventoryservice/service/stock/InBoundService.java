@@ -1,12 +1,12 @@
 package com.project.inventoryservice.service.stock;
 
-import com.project.inventoryservice.api.instock.dto.InStockResponseDto;
-import com.project.inventoryservice.api.instock.dto.InStockSaveRequestDto;
-import com.project.inventoryservice.api.instock.dto.InStockUpdateRequestDto;
+import com.project.inventoryservice.api.inbound.dto.InBoundResponseDto;
+import com.project.inventoryservice.api.inbound.dto.InBoundSaveRequestDto;
+import com.project.inventoryservice.api.inbound.dto.InBoundUpdateRequestDto;
 import com.project.inventoryservice.common.exception.BusinessException;
 import com.project.inventoryservice.common.exception.dto.ErrorCode;
-import com.project.inventoryservice.domain.instock.InStock;
-import com.project.inventoryservice.domain.instock.InStockRepository;
+import com.project.inventoryservice.domain.inbound.InBound;
+import com.project.inventoryservice.domain.inbound.InBoundRepository;
 import com.project.inventoryservice.domain.product.Product;
 import com.project.inventoryservice.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,45 +24,45 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class InStockService {
-    private final InStockRepository inStockRepository;
+public class InBoundService {
+    private final InBoundRepository inBoundRepository;
 
     private final ProductRepository productRepository;
 
-    public Page<InStockResponseDto> getPage(Pageable pageable, Long productId, String categoryCode, LocalDate startDate, LocalDate endDate) {
-        List<InStock> results = inStockRepository.findPage(pageable, productId, categoryCode, startDate, endDate);
-        List<InStockResponseDto> resultsDto = results.stream()
-                .map(InStockResponseDto::new)
+    public Page<InBoundResponseDto> getPage(Pageable pageable, Long productId, String categoryCode, LocalDate startDate, LocalDate endDate) {
+        List<InBound> results = inBoundRepository.findPage(pageable, productId, categoryCode, startDate, endDate);
+        List<InBoundResponseDto> resultsDto = results.stream()
+                .map(InBoundResponseDto::new)
                 .collect(Collectors.toList());
-        long count = inStockRepository.count();
+        long count = inBoundRepository.count();
 
         return new PageImpl<>(resultsDto, pageable, count);
     }
 
     @Transactional
-    public InStockResponseDto save(InStockSaveRequestDto requestDto) {
+    public InBoundResponseDto save(InBoundSaveRequestDto requestDto) {
         Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
-        InStock entity = inStockRepository.save(requestDto.toEntity(product));
+        InBound entity = inBoundRepository.save(requestDto.toEntity(product));
 
-        return new InStockResponseDto(entity);
+        return new InBoundResponseDto(entity);
     }
 
     @Transactional
-    public InStockResponseDto update(Long inStockId, InStockUpdateRequestDto requestDto) {
+    public InBoundResponseDto update(Long inStockId, InBoundUpdateRequestDto requestDto) {
         Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
-        InStock entity = findInStock(inStockId);
+        InBound entity = findInStock(inStockId);
         entity.update(product, requestDto.getInStockDate(), requestDto.getQuantity(), requestDto.getMemo());
-        return new InStockResponseDto(entity);
+        return new InBoundResponseDto(entity);
     }
 
     @Transactional
     public void delete(Long inStockId) {
-        InStock entity = findInStock(inStockId);
-        inStockRepository.delete(entity);
+        InBound entity = findInStock(inStockId);
+        inBoundRepository.delete(entity);
     }
 
-    private InStock findInStock(Long inStockId) {
-        return inStockRepository.findById(inStockId)
+    private InBound findInStock(Long inStockId) {
+        return inBoundRepository.findById(inStockId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE,"해당 내역을 찾을 수 없습니다."));
     }
 

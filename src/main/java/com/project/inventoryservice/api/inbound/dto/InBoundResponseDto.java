@@ -1,6 +1,6 @@
-package com.project.inventoryservice.api.instock.dto;
+package com.project.inventoryservice.api.inbound.dto;
 
-import com.project.inventoryservice.domain.instock.InStock;
+import com.project.inventoryservice.domain.inbound.InBound;
 import com.project.inventoryservice.domain.product.Category;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class InStockResponseDto {
+public class InBoundResponseDto {
 
     private Long id;
 
@@ -22,33 +22,33 @@ public class InStockResponseDto {
 
     private String productName;
 
-    private LocalDate inStockDate;
+    private LocalDate inBoundDate;
 
     private Integer quantity;
 
     private String memo;
 
     @Builder
-    public InStockResponseDto(Long id, String categoryName, Long productId, String productCode, String productName,
-                              LocalDate inStockDate, Integer quantity, String memo) {
+    public InBoundResponseDto(Long id, String categoryName, Long productId, String productCode, String productName,
+                              LocalDate inBoundDate, Integer quantity, String memo) {
         this.id = id;
         this.categoryName = categoryName;
         this.productId = productId;
         this.productCode = productCode;
         this.productName = productName;
-        this.inStockDate = inStockDate;
+        this.inBoundDate = inBoundDate;
         this.quantity = quantity;
         this.memo = memo;
     }
 
     @Builder
-    public InStockResponseDto(InStock entity) {
+    public InBoundResponseDto(InBound entity) {
         this.id = entity.getId();
         this.categoryName = Category.findByKey(entity.getProduct().getCategoryCode()).getName();
         this.productId = entity.getProduct().getId();
         this.productCode = entity.getProduct().getProductCode();
         this.productName = entity.getProduct().getProductName();
-        this.inStockDate = entity.getInStockDate();
+        this.inBoundDate = entity.getInBoundDate();
         this.quantity = entity.getQuantity();
         this.memo = entity.getMemo();
     }
