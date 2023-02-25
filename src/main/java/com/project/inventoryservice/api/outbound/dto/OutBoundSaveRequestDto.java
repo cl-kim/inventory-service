@@ -1,5 +1,7 @@
-package com.project.inventoryservice.api.outstock.dto;
+package com.project.inventoryservice.api.outbound.dto;
 
+import com.project.inventoryservice.domain.outbound.OutBound;
+import com.project.inventoryservice.domain.product.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,12 +11,12 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class OutStockUpdateRequestDto {
+public class OutBoundSaveRequestDto {
 
     @Schema(description = "상품 id", required = true)
     private Long productId;
     @Schema(description = "출고일", required = true)
-    private LocalDate outStockDate;
+    private LocalDate outBoundDate;
     @Schema(description = "거래처")
     private String customer;
     @Schema(description = "출고가격", required = true)
@@ -25,12 +27,24 @@ public class OutStockUpdateRequestDto {
     private String memo;
 
     @Builder
-    public OutStockUpdateRequestDto(Long productId, LocalDate outStockDate, String customer, Integer price, Integer quantity, String memo) {
+    public OutBoundSaveRequestDto(Long productId, LocalDate outBoundDate, String customer, Integer price, Integer quantity, String memo) {
         this.productId = productId;
-        this.outStockDate = outStockDate;
+        this.outBoundDate = outBoundDate;
         this.customer = customer;
         this.price = price;
         this.quantity = quantity;
         this.memo = memo;
     }
+
+    public OutBound toEntity(Product product){
+        return OutBound.builder()
+                .product(product)
+                .outBoundDate(outBoundDate)
+                .customer(customer)
+                .price(price)
+                .quantity(quantity)
+                .memo(memo)
+                .build();
+    }
+
 }

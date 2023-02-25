@@ -1,4 +1,4 @@
-package com.project.inventoryservice.domain.outstock;
+package com.project.inventoryservice.domain.outbound;
 
 import com.project.inventoryservice.domain.product.Product;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Entity
-public class OutStock {
+public class OutBound {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,7 +20,7 @@ public class OutStock {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private LocalDate outStockDate;
+    private LocalDate outBoundDate;
 
     private String customer;
 
@@ -31,19 +31,19 @@ public class OutStock {
     private String memo;
 
     @Builder
-    public OutStock(Product product, LocalDate outStockDate, String customer,
+    public OutBound(Product product, LocalDate outBoundDate, String customer,
                     Integer price, Integer quantity, String memo) {
         this.product = product;
-        this.outStockDate = outStockDate;
+        this.outBoundDate = outBoundDate;
         this.customer = customer;
         this.price = price;
         this.quantity = quantity;
         this.memo = memo;
     }
 
-    public OutStock update(Product product, LocalDate outStockDate, String customer, Integer price, Integer quantity, String memo){
+    public OutBound update(Product product, LocalDate outBoundDate, String customer, Integer price, Integer quantity, String memo){
         this.product = product;
-        this.outStockDate = outStockDate;
+        this.outBoundDate = outBoundDate;
         this.customer = customer;
         this.price = price;
         this.quantity = quantity;

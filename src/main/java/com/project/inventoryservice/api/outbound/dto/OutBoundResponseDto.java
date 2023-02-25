@@ -1,6 +1,6 @@
-package com.project.inventoryservice.api.outstock.dto;
+package com.project.inventoryservice.api.outbound.dto;
 
-import com.project.inventoryservice.domain.outstock.OutStock;
+import com.project.inventoryservice.domain.outbound.OutBound;
 import com.project.inventoryservice.domain.product.Category;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class OutStockResponseDto {
+public class OutBoundResponseDto {
     private Long id;
 
     private String categoryName;
@@ -21,7 +21,7 @@ public class OutStockResponseDto {
 
     private String productName;
 
-    private LocalDate outStockDate;
+    private LocalDate outBoundDate;
 
     private String customer;
 
@@ -32,13 +32,13 @@ public class OutStockResponseDto {
     private String memo;
 
     @Builder
-    public OutStockResponseDto(OutStock entity) {
+    public OutBoundResponseDto(OutBound entity) {
         this.id = entity.getId();
         this.categoryName = Category.findByKey(entity.getProduct().getCategoryCode()).getName();
         this.productId =  entity.getProduct().getId();
         this.productCode = entity.getProduct().getProductCode();
         this.productName = entity.getProduct().getProductName();
-        this.outStockDate = entity.getOutStockDate();
+        this.outBoundDate = entity.getOutBoundDate();
         this.customer = entity.getCustomer();
         this.price = entity.getPrice();
         this.quantity = entity.getQuantity();
