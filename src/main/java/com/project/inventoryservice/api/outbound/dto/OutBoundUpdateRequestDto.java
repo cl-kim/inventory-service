@@ -14,7 +14,7 @@ public class OutBoundUpdateRequestDto {
     @Schema(description = "상품 id", required = true)
     private Long productId;
     @Schema(description = "출고일", required = true)
-    private LocalDate outStockDate;
+    private LocalDate outBoundDate;
     @Schema(description = "거래처")
     private String customer;
     @Schema(description = "출고가격", required = true)
@@ -25,9 +25,9 @@ public class OutBoundUpdateRequestDto {
     private String memo;
 
     @Builder
-    public OutBoundUpdateRequestDto(Long productId, LocalDate outStockDate, String customer, Integer price, Integer quantity, String memo) {
+    public OutBoundUpdateRequestDto(Long productId, LocalDate outBoundDate, String customer, Integer price, Integer quantity, String memo) {
         this.productId = productId;
-        this.outStockDate = outStockDate;
+        this.outBoundDate = outBoundDate;
         this.customer = customer;
         this.price = price;
         this.quantity = quantity;

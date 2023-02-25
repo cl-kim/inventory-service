@@ -15,7 +15,7 @@ public class InBoundUpdateRequestDto {
     private Long productId;
 
     @Schema(description = "입고일", required = true)
-    private LocalDate inStockDate;
+    private LocalDate inBoundDate;
 
     @Schema(description = "수량", required = true)
     private Integer quantity;
@@ -24,9 +24,9 @@ public class InBoundUpdateRequestDto {
     private String memo;
 
     @Builder
-    public InBoundUpdateRequestDto(Long productId, LocalDate inStockDate, Integer quantity, String memo) {
+    public InBoundUpdateRequestDto(Long productId, LocalDate inBoundDate, Integer quantity, String memo) {
         this.productId = productId;
-        this.inStockDate = inStockDate;
+        this.inBoundDate = inBoundDate;
         this.quantity = quantity;
         this.memo = memo;
     }
