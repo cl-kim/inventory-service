@@ -14,6 +14,12 @@ public class InventoryApiController {
 
     private final InventoryService inventoryService;
 
+    @Operation(summary = "첫 시작여부 조회", description = "프로그램의 첫 시작 여부를 조회합니다")
+    @GetMapping("/inventory/check/isnew")
+    public Boolean checkIsNew() {
+        return inventoryService.checkIsNew();
+    }
+
     @Operation(summary = "마감여부 조회", description = "각 월별 마감 여부를 조회합니다")
     @GetMapping("/inventory/end/check/{date}")
     public Boolean checkMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {

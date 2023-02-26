@@ -16,6 +16,10 @@ import java.time.LocalDate;
 public class InventoryService {
     private final MonthlyCheckRepository monthlyCheckRepository;
 
+    public Boolean checkIsNew(){
+        return monthlyCheckRepository.findAll().isEmpty();
+    }
+
     public Boolean checkMonthlyEnd(LocalDate date) {
         MonthlyCheck entity = monthlyCheckRepository.findByEndMonth(date)
                 .orElse(MonthlyCheck.builder().isEnd(false).build());
