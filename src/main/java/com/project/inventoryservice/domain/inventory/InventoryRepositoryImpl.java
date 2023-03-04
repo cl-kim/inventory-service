@@ -44,7 +44,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         eqId(productId),
                         eqCategoryCode(categoryCode),
                         betweenDate(startDate,endDate))
-                .orderBy(inventory.id.desc())
+                .orderBy(inventory.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -73,7 +73,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         eqId(productId),
                         eqCategoryCode(categoryCode),
                         betweenDate(startDate,endDate))
-                .orderBy(inventory.id.desc())
+                .orderBy(inventory.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
