@@ -19,7 +19,7 @@ public class ProductDto {
     @QueryProjection
     public ProductDto(Integer month, Integer quantity) {
         this.month = month;
-        this.quantity = quantity;
+        this.quantity = (quantity < 0) ? quantity * -1 : quantity;
     }
 
     public ProductDto(MonthlyInventory entity){

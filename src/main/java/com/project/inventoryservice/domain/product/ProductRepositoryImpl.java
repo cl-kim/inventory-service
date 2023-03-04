@@ -54,7 +54,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     public List<MonthlyResponseDto> findInBound(LocalDate startDate, LocalDate endDate) {
         List<MonthlyResponseDto> result = jpaQueryFactory.select(inventory)
                 .from(inventory)
-                .leftJoin(inventory.product, product)
+                .innerJoin(inventory.product, product)
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.gt(0))
                 .groupBy(product.id, inventory.date.yearMonth())
@@ -77,18 +77,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     @Override
     public List<MonthlyResponseDto> findOutBound(LocalDate startDate, LocalDate endDate) {
         List<MonthlyResponseDto> list = jpaQueryFactory
-                .select(
-                        Projections.constructor(
-                                MonthlyResponseDto.class,
-                                product.categoryCode,
-                                product.productCode,
-                                product.productName,
-                                inventory.date.yearMonth(),
-                                inventory.quantity.sum()
-                        )
-                )
-                .from(product)
-                .innerJoin(product.inventoryList, inventory)
+                .select(inventory)
+                .from(inventory)
+                .innerJoin(inventory.product,product)
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.lt(0))
                 .groupBy(product.id, inventory.date.yearMonth())
