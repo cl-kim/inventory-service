@@ -1,10 +1,8 @@
 package com.project.inventoryservice.domain.product;
 
 import com.project.inventoryservice.api.monthly.dto.*;
-import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +10,11 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.project.inventoryservice.domain.inbound.QInBound.inBound;
+import static com.project.inventoryservice.domain.inventory.QInventory.inventory;
 import static com.project.inventoryservice.domain.monthlyInventory.QMonthlyInventory.monthlyInventory;
 import static com.project.inventoryservice.domain.product.QProduct.product;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.types.Projections.list;
 
 
 @RequiredArgsConstructor
@@ -31,8 +31,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetch();
     }
 
-    private BooleanExpression eqCategory(String categoryCode){
-        if(categoryCode == null){
+    private BooleanExpression eqCategory(String categoryCode) {
+        if (categoryCode == null) {
             return null;
         }
         return product.categoryCode.eq(categoryCode);
@@ -49,49 +49,62 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetch();
 
     }
+
     @Override
-    public List<MonthlyResponseDto> findInBound(LocalDate startDate, LocalDate endDate){
-        StringTemplate formattedDate = Expressions.stringTemplate(
-                "DATE_FORMAT({0},{1})", inBound.inBoundDate, ConstantImpl.create("%y%m")
-        );
+    public List<MonthlyResponseDto> findInBound(LocalDate startDate, LocalDate endDate) {
+        List<MonthlyResponseDto> result = jpaQueryFactory.select(inventory)
+                .from(inventory)
+                .leftJoin(inventory.product, product)
+                .where(inventory.date.between(startDate, endDate),
+                        inventory.quantity.gt(0))
+                .groupBy(product.id, inventory.date.yearMonth())
+                .orderBy(inventory.date.asc(), product.id.asc())
+                .distinct()
+                .transform(groupBy(product.id).list(
+                        Projections.constructor(MonthlyResponseDto.class,
+                                product.categoryCode,
+                                product.productCode,
+                                product.productName,
+                                list(Projections.constructor(
+                                        ProductDto.class,
+                                        inventory.date.yearMonth(),
+                                        inventory.quantity.sum()
+                                ))))
+                );
+        return result;
+    }
 
-//        List<MonthlyResponseDto> list = jpaQueryFactory
-//                .select(product)
-//                .from(product)
-//                .rightJoin(inBound).on(inBound.product.id.eq(product.id))
-//                .where(inBound.inBoundDate.between(startDate, endDate))
-//                .groupBy(inBound.inBoundDate.yearMonth(),product.id)
-//                .orderBy(inBound.inBoundDate.asc(), product.id.asc())
-//                .transform(groupBy(inBound.inBoundDate.yearMonth()).list()
-//                        MonthlyResponseDto.class,
-//                        product.categoryCode,
-//                        product.productCode,
-//                        product.productName
-//
-//                ));
-//                .transform(groupBy(product.id).(new QMonthlyResponseDto(
-//                        inBound.product.categoryCode,
-//                        inBound.product.productCode,
-//                        inBound.product.productName,
-//                        list(new QProductDto(inBound.inBoundDate.yearMonth().stringValue(),
-//                                inBound.quantity.sum()))
-//                )));
-            return null;
-//        return list.keySet().stream()
-//                .map(list::get)
-//                .collect(Collectors.toList());
-
-//        return list.stream()
-//                .collect(Collectors.groupingBy(dto -> dto.getProductCode(), LinkedHashMap::new, Collectors.toList()))
-//                .values().stream()
-//                .map(list -> {
-//                    InventoryResponseDto first = list.get(0);
-//                    return new InventoryResponseDto(
-//                            first.getProductId(),
-//                            first.getProductCode(),
-//                            first.getProductName(),
-//                            list.stream().map(dto -> new ProductDto(dto.get))
-//                    )
-//                }))
+    @Override
+    public List<MonthlyResponseDto> findOutBound(LocalDate startDate, LocalDate endDate) {
+        List<MonthlyResponseDto> list = jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                MonthlyResponseDto.class,
+                                product.categoryCode,
+                                product.productCode,
+                                product.productName,
+                                inventory.date.yearMonth(),
+                                inventory.quantity.sum()
+                        )
+                )
+                .from(product)
+                .innerJoin(product.inventoryList, inventory)
+                .where(inventory.date.between(startDate, endDate),
+                        inventory.quantity.lt(0))
+                .groupBy(product.id, inventory.date.yearMonth())
+                .orderBy(product.id.asc(), inventory.date.asc())
+                .distinct()
+                .transform(groupBy(product.id).list(
+                        Projections.constructor(MonthlyResponseDto.class,
+                                product.categoryCode,
+                                product.productCode,
+                                product.productName,
+                                list(Projections.constructor(
+                                        ProductDto.class,
+                                        inventory.date.yearMonth(),
+                                        inventory.quantity.sum()
+                                ))))
+                );
+        return list;
     }
 }

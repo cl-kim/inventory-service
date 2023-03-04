@@ -1,6 +1,6 @@
-package com.project.inventoryservice.api.inventory;
+package com.project.inventoryservice.api.closing;
 
-import com.project.inventoryservice.service.inventory.InventoryService;
+import com.project.inventoryservice.service.closing.ClosingService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,36 +10,30 @@ import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
-public class InventoryApiController {
+public class ClosingApiController {
 
-    private final InventoryService inventoryService;
-
-    @Operation(summary = "첫 시작여부 조회", description = "프로그램의 첫 시작 여부를 조회합니다")
-    @GetMapping("/inventory/check/isnew")
-    public Boolean checkIsNew() {
-        return inventoryService.checkIsNew();
-    }
+    private final ClosingService closingService;
 
     @Operation(summary = "마감여부 조회", description = "각 월별 마감 여부를 조회합니다")
-    @GetMapping("/inventory/end/check/{date}")
+    @GetMapping("/closing/inventory/check/{date}")
     public Boolean checkMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return inventoryService.checkMonthlyEnd(date);
+        return closingService.checkMonthlyClosing(date);
     }
 
     @Operation(summary = "마감 처리", description = "해당 월을 마감처리합니다.")
-    @PostMapping("/inventory/end/{date}")
+    @PostMapping("/closing/inventory/{date}")
     public Boolean saveMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date)  {
-        return inventoryService.saveMonthlyEnd(date);
+        return closingService.saveMonthlyClosing(date);
     }
     @Operation(summary = "최초 마감 처리", description = "최초 월 설정 시 전월 마감처리합니다.")
-    @PostMapping("/inventory/end-first/{date}")
+    @PostMapping("/closing-first/inventory/{date}")
     public Boolean saveFirstMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return inventoryService.saveFirstMonthlyEnd(date);
+        return closingService.saveFirstMonthlyClosing(date);
     }
 
     @Operation(summary = "마감 처리 취소", description = "해당 월의 마감처리를 취소합니다.")
-    @DeleteMapping("/inventory/end/{date}")
+    @DeleteMapping("/closing/inventory/{date}")
     public Boolean cancelMonthlyEnd(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return inventoryService.cancelMonthlyEnd(date);
+        return closingService.cancelMonthlyClosing(date);
     }
 }

@@ -1,6 +1,6 @@
 package com.project.inventoryservice.api.outbound.dto;
 
-import com.project.inventoryservice.domain.outbound.OutBound;
+import com.project.inventoryservice.domain.inventory.Inventory;
 import com.project.inventoryservice.domain.product.Category;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,17 +31,33 @@ public class OutBoundResponseDto {
 
     private String memo;
 
+
     @Builder
-    public OutBoundResponseDto(OutBound entity) {
+    public OutBoundResponseDto(Long id, String categoryCode, Long productId, String productCode, String productName,
+                               LocalDate outBoundDate, String customer, Integer price, Integer quantity, String memo) {
+        this.id = id;
+        this.categoryName = Category.findByKey(categoryCode).getName();
+        this.productId = productId;
+        this.productCode = productCode;
+        this.productName = productName;
+        this.outBoundDate = outBoundDate;
+        this.customer = customer;
+        this.price = price;
+        this.quantity = quantity * -1;
+        this.memo = memo;
+    }
+
+    @Builder
+    public OutBoundResponseDto(Inventory entity) {
         this.id = entity.getId();
         this.categoryName = Category.findByKey(entity.getProduct().getCategoryCode()).getName();
         this.productId =  entity.getProduct().getId();
         this.productCode = entity.getProduct().getProductCode();
         this.productName = entity.getProduct().getProductName();
-        this.outBoundDate = entity.getOutBoundDate();
+        this.outBoundDate = entity.getDate();
         this.customer = entity.getCustomer();
         this.price = entity.getPrice();
-        this.quantity = entity.getQuantity();
+        this.quantity = entity.getQuantity()  * -1;
         this.memo = entity.getMemo();
     }
 }

@@ -1,6 +1,6 @@
 package com.project.inventoryservice.api.inbound.dto;
 
-import com.project.inventoryservice.domain.inbound.InBound;
+import com.project.inventoryservice.domain.inventory.Inventory;
 import com.project.inventoryservice.domain.product.Category;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,33 +22,33 @@ public class InBoundResponseDto {
 
     private String productName;
 
-    private LocalDate inBoundDate;
+    private LocalDate date;
 
     private Integer quantity;
 
     private String memo;
 
     @Builder
-    public InBoundResponseDto(Long id, String categoryName, Long productId, String productCode, String productName,
-                              LocalDate inBoundDate, Integer quantity, String memo) {
+    public InBoundResponseDto(Long id, String categoryCode, Long productId, String productCode, String productName,
+                              LocalDate date, Integer quantity, String memo) {
         this.id = id;
-        this.categoryName = categoryName;
+        this.categoryName = Category.findByKey(categoryCode).getName();
         this.productId = productId;
         this.productCode = productCode;
         this.productName = productName;
-        this.inBoundDate = inBoundDate;
+        this.date = date;
         this.quantity = quantity;
         this.memo = memo;
     }
 
     @Builder
-    public InBoundResponseDto(InBound entity) {
+    public InBoundResponseDto(Inventory entity) {
         this.id = entity.getId();
         this.categoryName = Category.findByKey(entity.getProduct().getCategoryCode()).getName();
         this.productId = entity.getProduct().getId();
         this.productCode = entity.getProduct().getProductCode();
         this.productName = entity.getProduct().getProductName();
-        this.inBoundDate = entity.getInBoundDate();
+        this.date = entity.getDate();
         this.quantity = entity.getQuantity();
         this.memo = entity.getMemo();
     }

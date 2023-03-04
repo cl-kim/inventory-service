@@ -25,7 +25,7 @@ public class MonthlyResponseDto {
         this.categoryName = Category.findByKey(entity.getCategoryCode()).getName();
         this.productCode = entity.getProductCode();
         this.productName = entity.getProductName();
-        this.monthlyQuantityList = entity.getInBoundList().stream().map(ProductDto::new).collect(Collectors.toList());
+        this.monthlyQuantityList = entity.getMonthlyInventoryList().stream().map(ProductDto::new).collect(Collectors.toList());
     }
 
     @QueryProjection

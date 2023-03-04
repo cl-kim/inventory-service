@@ -1,6 +1,6 @@
 package com.project.inventoryservice.api.inbound.dto;
 
-import com.project.inventoryservice.domain.inbound.InBound;
+import com.project.inventoryservice.domain.inventory.Inventory;
 import com.project.inventoryservice.domain.product.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -30,10 +30,10 @@ public class InBoundSaveRequestDto {
         this.memo = memo;
     }
 
-    public InBound toEntity(Product product) {
-        return InBound.builder()
+    public Inventory toEntity(Product product) {
+        return Inventory.builder()
                 .product(product)
-                .inBoundDate(inBoundDate)
+                .date(inBoundDate)
                 .quantity(quantity)
                 .memo(memo)
                 .build();

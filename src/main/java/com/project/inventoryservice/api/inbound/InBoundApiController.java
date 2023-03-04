@@ -38,15 +38,15 @@ public class InBoundApiController {
     }
 
     @Operation(summary = "입고 내역 수정")
-    @PutMapping("/inbound/{inBoundId}")
-    public InBoundResponseDto update(@PathVariable Long inBoundId, @RequestBody @Valid InBoundUpdateRequestDto requestDto) {
-        return inBoundService.update(inBoundId, requestDto);
+    @PutMapping("/inbound/{id}")
+    public InBoundResponseDto update(@PathVariable Long id, @RequestBody @Valid InBoundUpdateRequestDto requestDto) {
+        return inBoundService.update(id, requestDto);
     }
 
     @Operation(summary = "입고 내역 삭제")
-    @DeleteMapping("/inbound/{inBoundId}")
+    @DeleteMapping("/inbound/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long inBoundId) {
-        inBoundService.delete(inBoundId);
+    public void delete(@PathVariable Long id) {
+        inBoundService.delete(id);
     }
 }

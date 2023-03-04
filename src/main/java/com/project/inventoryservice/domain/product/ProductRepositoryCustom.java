@@ -12,4 +12,5 @@ public interface ProductRepositoryCustom {
     List<Product> findInventory(LocalDate startDate, LocalDate endDate);
 
     List<MonthlyResponseDto> findInBound(LocalDate startDate, LocalDate endDate);
+    List<MonthlyResponseDto> findOutBound(LocalDate startDate, LocalDate endDate);
 }
