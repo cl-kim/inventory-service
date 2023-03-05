@@ -1,4 +1,4 @@
-package com.project.inventoryservice.api.inventory.dto;
+package com.project.inventoryservice.api.closing.dto;
 
 
 import lombok.Getter;
