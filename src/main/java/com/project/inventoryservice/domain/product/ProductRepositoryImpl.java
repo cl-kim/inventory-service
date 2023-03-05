@@ -58,7 +58,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.gt(0))
                 .groupBy(product.id, inventory.date.yearMonth())
-                .orderBy(inventory.date.asc(), product.id.asc())
+                .orderBy(inventory.date.yearMonth().asc(), product.id.asc())
                 .distinct()
                 .transform(groupBy(product.id).list(
                         Projections.constructor(MonthlyResponseDto.class,
@@ -83,7 +83,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.lt(0))
                 .groupBy(product.id, inventory.date.yearMonth())
-                .orderBy(product.id.asc(), inventory.date.asc())
+                .orderBy(inventory.date.yearMonth().asc(), product.id.asc())
                 .distinct()
                 .transform(groupBy(product.id).list(
                         Projections.constructor(MonthlyResponseDto.class,
