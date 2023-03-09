@@ -3,6 +3,7 @@ package com.project.inventoryservice.api.monthly.dto;
 import com.project.inventoryservice.domain.product.Category;
 import com.project.inventoryservice.domain.product.Product;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +29,7 @@ public class MonthlyResponseDto {
         this.monthlyQuantityList = entity.getMonthlyInventoryList().stream().map(ProductDto::new).collect(Collectors.toList());
     }
 
+    @Builder
     @QueryProjection
     public MonthlyResponseDto(String categoryName, String productCode, String productName, List<ProductDto> monthlyQuantityList) {
         this.categoryName = categoryName;

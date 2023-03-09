@@ -10,7 +10,6 @@ import com.project.inventoryservice.domain.inventory.InventoryRepository;
 import com.project.inventoryservice.domain.product.Product;
 import com.project.inventoryservice.domain.product.ProductRepository;
 import com.project.inventoryservice.service.closing.ClosingService;
-import com.project.inventoryservice.service.inventory.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -76,6 +75,6 @@ public class OutBoundService {
     private void checkMonthlyEnd(LocalDate endDate){
         if(closingService.checkMonthlyClosing(LocalDate.of(endDate.getYear(), endDate.getMonthValue(), 1))){
             throw new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE, "마감된 월입니다.");
-        };
+        }
     }
 }

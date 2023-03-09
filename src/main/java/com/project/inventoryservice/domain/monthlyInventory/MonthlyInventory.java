@@ -1,6 +1,7 @@
 package com.project.inventoryservice.domain.monthlyInventory;
 
 import com.project.inventoryservice.domain.product.Product;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,10 @@ public class MonthlyInventory {
 
     private Integer quantity;
 
+    @Builder
+    public MonthlyInventory(Product product, LocalDate monthlyDate, Integer quantity) {
+        this.product = product;
+        this.monthlyDate = monthlyDate;
+        this.quantity = quantity;
+    }
 }

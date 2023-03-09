@@ -1,6 +1,8 @@
 package com.project.inventoryservice.api.closing.dto;
 
 
+import com.project.inventoryservice.domain.product.Category;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,25 +10,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StockResponseDto {
 
-    private Integer currentMonthStock;
-    private Integer currentMonthOutStock;
-    private Integer currentMonthInStock;
-    private Integer lastMonthStock;
-    private Integer lastMonthOutStock;
-    private Integer lastMonthInStock;
+    private String categoryName;
     private String productCode;
     private String productName;
+    private Integer quantity;
 
-    public StockResponseDto(Integer currentMonthStock, Integer currentMonthOutStock, Integer currentMonthInStock,
-                            Integer lastMonthStock, Integer lastMonthOutStock, Integer lastMonthInStock,
-                            String productCode, String productName) {
-        this.currentMonthStock = currentMonthStock;
-        this.currentMonthOutStock = currentMonthOutStock;
-        this.currentMonthInStock = currentMonthInStock;
-        this.lastMonthStock = lastMonthStock;
-        this.lastMonthOutStock = lastMonthOutStock;
-        this.lastMonthInStock = lastMonthInStock;
+    @Builder
+    public StockResponseDto(String categoryCode, String productCode, String productName, Integer quantity) {
+        this.categoryName = Category.findByKey(categoryCode).getName();
         this.productCode = productCode;
         this.productName = productName;
+        this.quantity = quantity;
     }
 }

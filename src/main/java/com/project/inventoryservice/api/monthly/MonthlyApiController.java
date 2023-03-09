@@ -1,7 +1,7 @@
 package com.project.inventoryservice.api.monthly;
 
+import com.project.inventoryservice.api.closing.dto.StockResponseDto;
 import com.project.inventoryservice.api.monthly.dto.MonthlyResponseDto;
-import com.project.inventoryservice.api.monthly.dto.InventoryResponseDto;
 import com.project.inventoryservice.service.stock.MonthlyService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class MonthlyApiController {
 
     @Operation(summary = "현재 재고 조회", description = "현재 시점 재고를 조회합니다.")
     @GetMapping("/live/inventory")
-    public List<InventoryResponseDto> findLiveInventory() {
+    public List<StockResponseDto> findLiveInventory() {
         LocalDate now = LocalDate.now();
         return monthlyService.findInventory(now);
     }

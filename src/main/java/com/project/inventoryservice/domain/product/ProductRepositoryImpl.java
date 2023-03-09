@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.project.inventoryservice.domain.inventory.QInventory.inventory;
 import static com.project.inventoryservice.domain.monthlyInventory.QMonthlyInventory.monthlyInventory;
@@ -52,15 +54,20 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @Override
     public List<MonthlyResponseDto> findInBound(LocalDate startDate, LocalDate endDate) {
-        List<MonthlyResponseDto> result = jpaQueryFactory.select(inventory)
+        List<MonthlyResponseDto> result = jpaQueryFactory.select(
+                product.categoryCode,
+                product.productCode,
+                product.productName,
+                inventory.date.yearMonth(),
+                inventory.quantity.sum())
                 .from(inventory)
                 .innerJoin(inventory.product, product)
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.gt(0))
-                .groupBy(product.id, inventory.date.yearMonth())
+                .groupBy(product.productCode, inventory.date.yearMonth())
                 .orderBy(inventory.date.yearMonth().asc(), product.id.asc())
                 .distinct()
-                .transform(groupBy(product.id).list(
+                .transform(groupBy(product.productCode).list(
                         Projections.constructor(MonthlyResponseDto.class,
                                 product.categoryCode,
                                 product.productCode,
@@ -71,15 +78,19 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                                         inventory.quantity.sum()
                                 ))))
                 );
-        return result;
+        return getMonthlyResponseDtos(result);
     }
 
     @Override
     public List<MonthlyResponseDto> findOutBound(LocalDate startDate, LocalDate endDate) {
-        List<MonthlyResponseDto> list = jpaQueryFactory
-                .select(inventory)
+        List<MonthlyResponseDto> result = jpaQueryFactory
+                .select(product.categoryCode,
+                        product.productCode,
+                        product.productName,
+                        inventory.date.yearMonth(),
+                        inventory.quantity.sum())
                 .from(inventory)
-                .innerJoin(inventory.product,product)
+                .innerJoin(inventory.product, product)
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.lt(0))
                 .groupBy(product.id, inventory.date.yearMonth())
@@ -96,6 +107,24 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                                         inventory.quantity.sum()
                                 ))))
                 );
-        return list;
+        return getMonthlyResponseDtos(result);
+    }
+
+    private List<MonthlyResponseDto> getMonthlyResponseDtos(List<MonthlyResponseDto> result) {
+        Map<String, List<MonthlyResponseDto>> groupedProductMap = result.stream()
+                .collect(Collectors.groupingBy(MonthlyResponseDto::getProductName));
+
+        return groupedProductMap.entrySet().stream()
+                .map(entry -> {
+                    MonthlyResponseDto monthlyResponseDto = MonthlyResponseDto.builder()
+                            .categoryName(entry.getValue().get(0).getCategoryName())
+                            .productCode(entry.getValue().get(0).getProductCode())
+                            .productName(entry.getKey())
+                            .monthlyQuantityList(entry.getValue().stream()
+                                    .flatMap(dto -> dto.getMonthlyQuantityList().stream())
+                                    .collect(Collectors.toList())).build();
+                    return monthlyResponseDto;
+                })
+                .collect(Collectors.toList());
     }
 }

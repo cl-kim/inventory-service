@@ -1,5 +1,6 @@
 package com.project.inventoryservice.domain.inventory;
 
+import com.project.inventoryservice.api.closing.dto.StockResponseDto;
 import com.project.inventoryservice.api.inbound.dto.InBoundResponseDto;
 import com.project.inventoryservice.api.outbound.dto.OutBoundResponseDto;
 import com.querydsl.core.types.ConstantImpl;
@@ -79,6 +80,20 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<StockResponseDto> findTotalInventory(LocalDate date) {
+        LocalDate startDate = LocalDate.of(date.getYear(), date.getMonth(), 1);
+        return jpaQueryFactory.select(
+                Projections.constructor(StockResponseDto.class,
+                        inventory.product.categoryCode,
+                        inventory.product.productCode,
+                        inventory.product.productName,
+                        inventory.quantity.sum()))
+                .from(inventory)
+                .where(inventory.date.between(startDate,date))
+                .groupBy(inventory.product.id)
+                .fetch();
+    }
 
     public List<InBoundResponseDto> findMonthStock(LocalDate date){
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -90,16 +105,17 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
         );
 
         return jpaQueryFactory.select(
-                        Projections.constructor(InBoundResponseDto.class,
-                                inventory.product.id,
-                                inventory.product.productCode,
-                                inventory.product.productName,
-                                inventory.quantity.sum()))
+                Projections.constructor(InBoundResponseDto.class,
+                        inventory.product.id,
+                        inventory.product.productCode,
+                        inventory.product.productName,
+                        inventory.quantity.sum()))
                 .from(inventory)
                 .where(formattedDate.eq(conditionDate))
                 .groupBy(inventory.product.id, formattedDate)
                 .fetch();
     }
+
 
     private BooleanExpression betweenDate(LocalDate startDate, LocalDate endDate){
         if(!(startDate == null) && !(endDate == null)){

@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface MonthlyInventoryRepositoryCustom {
 
-    List<StockResponseDto> findLastStock(LocalDate lastMonth);
+    List<StockResponseDto> findMonthlyInventory(LocalDate month);
+
 
 }
