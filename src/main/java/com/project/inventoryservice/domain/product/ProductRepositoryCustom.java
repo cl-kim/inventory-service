@@ -9,8 +9,8 @@ import java.util.List;
 public interface ProductRepositoryCustom {
     List<Product> findProduct(String categoryCode, Pageable pageable);
 
-    List<Product> findInventory(LocalDate startDate, LocalDate endDate);
+    List<Product> findInventory(String categoryCode, LocalDate startDate, LocalDate endDate);
 
-    List<MonthlyResponseDto> findInBound(LocalDate startDate, LocalDate endDate);
-    List<MonthlyResponseDto> findOutBound(LocalDate startDate, LocalDate endDate);
+    List<MonthlyResponseDto> findInBound(String categoryCode, LocalDate startDate, LocalDate endDate);
+    List<MonthlyResponseDto> findOutBound(String categoryCode, LocalDate startDate, LocalDate endDate);
 }
