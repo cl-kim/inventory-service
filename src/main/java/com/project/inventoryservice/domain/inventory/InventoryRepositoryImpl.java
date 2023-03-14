@@ -81,7 +81,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
     }
 
     @Override
-    public List<StockResponseDto> findTotalInventory(LocalDate date) {
+    public List<StockResponseDto> findTotalInventory(String categoryCode, LocalDate date) {
         LocalDate startDate = LocalDate.of(date.getYear(), date.getMonth(), 1);
         return jpaQueryFactory.select(
                 Projections.constructor(StockResponseDto.class,
@@ -90,7 +90,44 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         inventory.product.productName,
                         inventory.quantity.sum()))
                 .from(inventory)
-                .where(inventory.date.between(startDate,date))
+                .where(eqCategoryCode(categoryCode),
+                        inventory.date.between(startDate,date))
+                .groupBy(inventory.product.id)
+                .fetch();
+    }
+
+    @Override
+    public List<StockResponseDto> findTotalInBound(String categoryCode, LocalDate date) {
+        LocalDate startDate = LocalDate.of(date.getYear(), date.getMonth(), 1);
+        return jpaQueryFactory.select(
+                        Projections.constructor(StockResponseDto.class,
+                                inventory.product.categoryCode,
+                                inventory.product.productCode,
+                                inventory.product.productName,
+                                inventory.quantity.sum()))
+                .from(inventory)
+                .where(eqCategoryCode(categoryCode),
+                        inventory.quantity.gt(0),
+                        inventory.date.between(startDate,date)
+                )
+                .groupBy(inventory.product.id)
+                .fetch();
+    }
+
+    @Override
+    public List<StockResponseDto> findTotalOutBound(String categoryCode, LocalDate date) {
+        LocalDate startDate = LocalDate.of(date.getYear(), date.getMonth(), 1);
+        return jpaQueryFactory.select(
+                        Projections.constructor(StockResponseDto.class,
+                                inventory.product.categoryCode,
+                                inventory.product.productCode,
+                                inventory.product.productName,
+                                inventory.quantity.sum()))
+                .from(inventory)
+                .where(eqCategoryCode(categoryCode),
+                        inventory.quantity.lt(0),
+                        inventory.date.between(startDate,date)
+                )
                 .groupBy(inventory.product.id)
                 .fetch();
     }

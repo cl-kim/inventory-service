@@ -14,5 +14,7 @@ public interface InventoryRepositoryCustom {
 
     List<OutBoundResponseDto> findOutBoundPage(Pageable pageable, Long productId, String categoryCode, LocalDate startDate, LocalDate endDate);
 
-    List<StockResponseDto> findTotalInventory(LocalDate date);
+    List<StockResponseDto> findTotalInventory(String categoryCode, LocalDate date);
+    List<StockResponseDto> findTotalInBound(String categoryCode, LocalDate date);
+    List<StockResponseDto> findTotalOutBound(String categoryCode, LocalDate date);
 }

@@ -35,6 +35,14 @@ public class ClosingService {
     private final MonthlyService monthlyService;
 
     /**
+     * 최초 여부 확인
+     */
+    public Boolean checkIsNew(){
+        return monthlyCheckRepository.findAll().isEmpty();
+    }
+
+
+    /**
      * 마감 여부 확인
      */
     public Boolean checkMonthlyClosing(LocalDate date) {

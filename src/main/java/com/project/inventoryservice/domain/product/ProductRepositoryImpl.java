@@ -41,19 +41,20 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public List<Product> findInventory(LocalDate startDate, LocalDate endDate) {
+    public List<Product> findInventory(String categoryCode, LocalDate startDate, LocalDate endDate) {
         return jpaQueryFactory
                 .selectDistinct(product)
                 .from(product)
                 .join(product.monthlyInventoryList, monthlyInventory).fetchJoin()
-                .where(monthlyInventory.monthlyDate.between(startDate, endDate))
+                .where(monthlyInventory.monthlyDate.between(startDate, endDate),
+                        eqCategory(categoryCode))
                 .orderBy(monthlyInventory.monthlyDate.asc(), product.id.asc())
                 .fetch();
 
     }
 
     @Override
-    public List<MonthlyResponseDto> findInBound(LocalDate startDate, LocalDate endDate) {
+    public List<MonthlyResponseDto> findInBound(String categoryCode, LocalDate startDate, LocalDate endDate) {
         List<MonthlyResponseDto> result = jpaQueryFactory.select(
                 product.categoryCode,
                 product.productCode,
@@ -63,7 +64,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .from(inventory)
                 .innerJoin(inventory.product, product)
                 .where(inventory.date.between(startDate, endDate),
-                        inventory.quantity.gt(0))
+                        inventory.quantity.gt(0),
+                        eqCategory(categoryCode))
                 .groupBy(product.productCode, inventory.date.yearMonth())
                 .orderBy(inventory.date.yearMonth().asc(), product.id.asc())
                 .distinct()
@@ -82,7 +84,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public List<MonthlyResponseDto> findOutBound(LocalDate startDate, LocalDate endDate) {
+    public List<MonthlyResponseDto> findOutBound(String categoryCode, LocalDate startDate, LocalDate endDate) {
         List<MonthlyResponseDto> result = jpaQueryFactory
                 .select(product.categoryCode,
                         product.productCode,
@@ -92,7 +94,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .from(inventory)
                 .innerJoin(inventory.product, product)
                 .where(inventory.date.between(startDate, endDate),
-                        inventory.quantity.lt(0))
+                        inventory.quantity.lt(0),
+                        eqCategory(categoryCode))
                 .groupBy(product.id, inventory.date.yearMonth())
                 .orderBy(inventory.date.yearMonth().asc(), product.id.asc())
                 .distinct()
@@ -116,14 +119,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         return groupedProductMap.entrySet().stream()
                 .map(entry -> {
-                    MonthlyResponseDto monthlyResponseDto = MonthlyResponseDto.builder()
+                    return MonthlyResponseDto.builder()
                             .categoryName(entry.getValue().get(0).getCategoryName())
                             .productCode(entry.getValue().get(0).getProductCode())
                             .productName(entry.getKey())
                             .monthlyQuantityList(entry.getValue().stream()
                                     .flatMap(dto -> dto.getMonthlyQuantityList().stream())
                                     .collect(Collectors.toList())).build();
-                    return monthlyResponseDto;
                 })
                 .collect(Collectors.toList());
     }

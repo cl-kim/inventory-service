@@ -22,7 +22,7 @@ public class InBoundResponseDto {
 
     private String productName;
 
-    private LocalDate date;
+    private LocalDate inBoundDate;
 
     private Integer quantity;
 
@@ -30,13 +30,13 @@ public class InBoundResponseDto {
 
     @Builder
     public InBoundResponseDto(Long id, String categoryCode, Long productId, String productCode, String productName,
-                              LocalDate date, Integer quantity, String memo) {
+                              LocalDate inBoundDate, Integer quantity, String memo) {
         this.id = id;
         this.categoryName = Category.findByKey(categoryCode).getName();
         this.productId = productId;
         this.productCode = productCode;
         this.productName = productName;
-        this.date = date;
+        this.inBoundDate = inBoundDate;
         this.quantity = quantity;
         this.memo = memo;
     }
@@ -48,7 +48,7 @@ public class InBoundResponseDto {
         this.productId = entity.getProduct().getId();
         this.productCode = entity.getProduct().getProductCode();
         this.productName = entity.getProduct().getProductName();
-        this.date = entity.getDate();
+        this.inBoundDate = entity.getDate();
         this.quantity = entity.getQuantity();
         this.memo = entity.getMemo();
     }
