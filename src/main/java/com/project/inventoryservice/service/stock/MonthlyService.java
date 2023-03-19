@@ -75,8 +75,9 @@ public class MonthlyService {
      */
     public List<MonthlyResponseDto> findMonthlyInventory(String categoryCode, LocalDate startDate, LocalDate endDate) {
         if (startDate == null) {
-            startDate = LocalDate.now().minusYears(1L).minusMonths(1L);
-            endDate = LocalDate.now().minusMonths(1L);
+            LocalDate now = LocalDate.now();
+            startDate = now.minusYears(1L).withDayOfMonth(1);
+            endDate = now.minusMonths(1L).withDayOfMonth(now.minusMonths(1L).lengthOfMonth());
         }
         List<Product> inventoryList = productRepository.findInventory(categoryCode, startDate, endDate);
 
@@ -88,9 +89,9 @@ public class MonthlyService {
      */
     public List<MonthlyResponseDto> findMonthlyInbound(String categoryCode, LocalDate startDate, LocalDate endDate) {
         if (startDate == null) {
-            LocalDate now = LocalDate.now().minusMonths(1L);
-            startDate = LocalDate.of(now.minusYears(1L).getYear(), now.getMonthValue(), 1);
-            endDate = LocalDate.of(now.getYear(), now.getMonthValue(), now.lengthOfMonth());
+            LocalDate now = LocalDate.now();
+            startDate = now.minusYears(1L).withDayOfMonth(1);
+            endDate = now.minusMonths(1L).withDayOfMonth(now.minusMonths(1L).lengthOfMonth());
         }
         return productRepository.findInBound(categoryCode, startDate, endDate);
     }
@@ -100,8 +101,9 @@ public class MonthlyService {
      */
     public List<MonthlyResponseDto> findMonthlyOutbound(String categoryCode, LocalDate startDate, LocalDate endDate) {
         if (startDate == null) {
-            startDate = LocalDate.now().minusYears(1L).minusMonths(1L);
-            endDate = LocalDate.now().minusMonths(1L);
+            LocalDate now = LocalDate.now();
+            startDate = now.minusYears(1L).withDayOfMonth(1);
+            endDate = now.minusMonths(1L).withDayOfMonth(now.minusMonths(1L).lengthOfMonth());
         }
 
         return productRepository.findOutBound(categoryCode, startDate, endDate);

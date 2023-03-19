@@ -50,7 +50,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         eqCategory(categoryCode))
                 .orderBy(monthlyInventory.monthlyDate.asc(), product.id.asc())
                 .fetch();
-
     }
 
     @Override
@@ -120,7 +119,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         return groupedProductMap.entrySet().stream()
                 .map(entry -> {
                     return MonthlyResponseDto.builder()
-                            .categoryName(entry.getValue().get(0).getCategoryName())
+                            .categoryName(Category.findByKey(entry.getValue().get(0).getCategoryName()).getName())
                             .productCode(entry.getValue().get(0).getProductCode())
                             .productName(entry.getKey())
                             .monthlyQuantityList(entry.getValue().stream()
