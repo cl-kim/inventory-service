@@ -66,7 +66,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.gt(0),
                         eqCategory(categoryCode))
-                .groupBy(product.productCode, inventory.date.yearMonth())
+                .groupBy(product.categoryCode, product.productCode, product.productName, inventory.date.yearMonth())
                 .orderBy(inventory.date.yearMonth().asc(), product.id.asc())
                 .distinct()
                 .transform(groupBy(product.productCode).list(
@@ -96,7 +96,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.lt(0),
                         eqCategory(categoryCode))
-                .groupBy(product.id, inventory.date.yearMonth())
+                .groupBy(product.categoryCode, product.productCode, product.productName,  inventory.date.yearMonth())
                 .orderBy(inventory.date.yearMonth().asc(), product.id.asc())
                 .distinct()
                 .transform(groupBy(product.id).list(

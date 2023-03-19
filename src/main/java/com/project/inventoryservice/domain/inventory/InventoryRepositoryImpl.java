@@ -92,7 +92,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .from(inventory)
                 .where(eqCategoryCode(categoryCode),
                         inventory.date.between(startDate,date))
-                .groupBy(inventory.product.id)
+                .groupBy(product.categoryCode, product.productCode, product.productName)
                 .fetch();
     }
 
@@ -110,7 +110,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         inventory.quantity.gt(0),
                         inventory.date.between(startDate,date)
                 )
-                .groupBy(inventory.product.id)
+                .groupBy(product.categoryCode, product.productCode, product.productName)
                 .fetch();
     }
 
@@ -128,7 +128,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         inventory.quantity.lt(0),
                         inventory.date.between(startDate,date)
                 )
-                .groupBy(inventory.product.id)
+                .groupBy(product.categoryCode, product.productCode, product.productName)
                 .fetch();
     }
 
