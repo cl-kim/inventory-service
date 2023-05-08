@@ -1,6 +1,8 @@
 package com.project.inventoryservice.domain.inventory;
 
 import com.project.inventoryservice.api.closing.dto.StockResponseDto;
+import com.project.inventoryservice.api.dashboard.dto.ProductDto;
+import com.project.inventoryservice.api.dashboard.dto.YearSummaryDto;
 import com.project.inventoryservice.api.inbound.dto.InBoundResponseDto;
 import com.project.inventoryservice.api.outbound.dto.OutBoundResponseDto;
 import com.querydsl.core.types.ConstantImpl;
@@ -16,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.project.inventoryservice.domain.inventory.QInventory.inventory;
+import static com.project.inventoryservice.domain.monthlyInventory.QMonthlyInventory.monthlyInventory;
 import static com.project.inventoryservice.domain.product.QProduct.product;
 
 
@@ -153,6 +156,43 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public YearSummaryDto findYearSummary(LocalDate now) {
+        LocalDate date = now.minusMonths(1L);
+        LocalDate startDate = date.minusYears(1L).withDayOfMonth(1);
+        LocalDate endDate = date.withDayOfMonth(date.lengthOfMonth());
+
+        List<ProductDto> inBoundList = jpaQueryFactory.select(
+                Projections.constructor(ProductDto.class,
+                        inventory.date.yearMonth(),
+                        inventory.quantity.sum()))
+                .from(inventory)
+                .where(inventory.quantity.gt(0),
+                        inventory.date.between(startDate, endDate))
+                .groupBy(inventory.date.yearMonth())
+                .fetch();
+
+        List<ProductDto> outBoundList = jpaQueryFactory.select(
+                        Projections.constructor(ProductDto.class,
+                                inventory.date.yearMonth(),
+                                inventory.quantity.sum()))
+                .from(inventory)
+                .where(inventory.quantity.lt(0),
+                        inventory.date.between(startDate, endDate))
+                .groupBy(inventory.date.yearMonth())
+                .fetch();
+
+        List<ProductDto> inventoryList = jpaQueryFactory.select(
+                        Projections.constructor(ProductDto.class,
+                                monthlyInventory.monthlyDate.yearMonth(),
+                                monthlyInventory.quantity.sum()))
+                .from(monthlyInventory)
+                .where(monthlyInventory.monthlyDate.between(startDate,endDate))
+                .groupBy(monthlyInventory.monthlyDate.yearMonth())
+                .fetch();
+
+        return new YearSummaryDto(inBoundList, outBoundList, inventoryList);
+    }
 
     private BooleanExpression betweenDate(LocalDate startDate, LocalDate endDate){
         if(!(startDate == null) && !(endDate == null)){
