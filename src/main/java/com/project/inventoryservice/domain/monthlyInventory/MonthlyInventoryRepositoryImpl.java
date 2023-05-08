@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.project.inventoryservice.domain.inventory.QInventory.inventory;
 import static com.project.inventoryservice.domain.monthlyInventory.QMonthlyInventory.monthlyInventory;
 
 
@@ -50,7 +49,7 @@ public class MonthlyInventoryRepositoryImpl implements MonthlyInventoryRepositor
     }
 
     private BooleanExpression eqCategoryCode(String categoryCode){
-        return categoryCode == null ? null : inventory.product.categoryCode.eq(categoryCode);
+        return categoryCode == null ? null : monthlyInventory.product.categoryCode.eq(categoryCode);
     }
 
 
