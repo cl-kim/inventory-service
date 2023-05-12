@@ -112,7 +112,7 @@ public class ClosingService {
 
     @Transactional
     public void saveMonthlyInventory(LocalDate date) {
-        List<StockResponseDto> inventoryList = monthlyService.findInventory(date);
+        List<StockResponseDto> inventoryList = monthlyService.findInventory(null , date);
         List<MonthlyInventory> saveList = new ArrayList<>();
 
         for (StockResponseDto inventory : inventoryList) {

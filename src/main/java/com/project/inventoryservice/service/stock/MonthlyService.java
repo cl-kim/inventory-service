@@ -32,7 +32,7 @@ public class MonthlyService {
      */
     public List<StockResponseDto> findInventory(String categoryCode, LocalDate date) {
         // 전월 재고 조회 <List> 상품 특징 4개 ( 상품 코드, 이름, 수량 )
-        List<StockResponseDto> lastInventory = findMonthInventory(date.minusMonths(1L));
+        List<StockResponseDto> lastInventory = findMonthInventory(date.minusMonths(1L), categoryCode);
         List<StockResponseDto> sumList = inventoryRepository.findTotalInventory(categoryCode, date);
 
         List<StockResponseDto> mergedList = Stream.concat(lastInventory.stream(), sumList.stream())
@@ -61,12 +61,12 @@ public class MonthlyService {
      * 단일 월 재고 조회
      * 해당달 사이 날짜가 요청이 되면 그 달의 월간 재고를 반환
      */
-    public List<StockResponseDto> findMonthInventory(LocalDate month) {
+    public List<StockResponseDto> findMonthInventory(LocalDate month, String categoryCode) {
         if (month == null) {
             month = LocalDate.now().minusMonths(1L);
         }
 
-        return monthlyInventoryRepository.findMonthlyInventory(month);
+        return monthlyInventoryRepository.findMonthlyInventory(month, categoryCode);
     }
 
 
@@ -75,8 +75,9 @@ public class MonthlyService {
      */
     public List<MonthlyResponseDto> findMonthlyInventory(String categoryCode, LocalDate startDate, LocalDate endDate) {
         if (startDate == null) {
-            startDate = LocalDate.now().minusYears(1L).minusMonths(1L);
-            endDate = LocalDate.now().minusMonths(1L);
+            LocalDate now = LocalDate.now();
+            startDate = now.minusYears(1L).withDayOfMonth(1);
+            endDate = now.minusMonths(1L).withDayOfMonth(now.minusMonths(1L).lengthOfMonth());
         }
         List<Product> inventoryList = productRepository.findInventory(categoryCode, startDate, endDate);
 
@@ -88,9 +89,9 @@ public class MonthlyService {
      */
     public List<MonthlyResponseDto> findMonthlyInbound(String categoryCode, LocalDate startDate, LocalDate endDate) {
         if (startDate == null) {
-            LocalDate now = LocalDate.now().minusMonths(1L);
-            startDate = LocalDate.of(now.minusYears(1L).getYear(), now.getMonthValue(), 1);
-            endDate = LocalDate.of(now.getYear(), now.getMonthValue(), now.lengthOfMonth());
+            LocalDate now = LocalDate.now();
+            startDate = now.minusYears(1L).withDayOfMonth(1);
+            endDate = now.minusMonths(1L).withDayOfMonth(now.minusMonths(1L).lengthOfMonth());
         }
         return productRepository.findInBound(categoryCode, startDate, endDate);
     }
@@ -100,8 +101,9 @@ public class MonthlyService {
      */
     public List<MonthlyResponseDto> findMonthlyOutbound(String categoryCode, LocalDate startDate, LocalDate endDate) {
         if (startDate == null) {
-            startDate = LocalDate.now().minusYears(1L).minusMonths(1L);
-            endDate = LocalDate.now().minusMonths(1L);
+            LocalDate now = LocalDate.now();
+            startDate = now.minusYears(1L).withDayOfMonth(1);
+            endDate = now.minusMonths(1L).withDayOfMonth(now.minusMonths(1L).lengthOfMonth());
         }
 
         return productRepository.findOutBound(categoryCode, startDate, endDate);

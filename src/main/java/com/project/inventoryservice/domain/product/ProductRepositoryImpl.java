@@ -50,7 +50,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         eqCategory(categoryCode))
                 .orderBy(monthlyInventory.monthlyDate.asc(), product.id.asc())
                 .fetch();
-
     }
 
     @Override
@@ -66,7 +65,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.gt(0),
                         eqCategory(categoryCode))
-                .groupBy(product.productCode, inventory.date.yearMonth())
+                .groupBy(product.categoryCode, product.productCode, product.productName, inventory.date.yearMonth())
                 .orderBy(inventory.date.yearMonth().asc(), product.id.asc())
                 .distinct()
                 .transform(groupBy(product.productCode).list(
@@ -96,7 +95,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(inventory.date.between(startDate, endDate),
                         inventory.quantity.lt(0),
                         eqCategory(categoryCode))
-                .groupBy(product.id, inventory.date.yearMonth())
+                .groupBy(product.categoryCode, product.productCode, product.productName,  inventory.date.yearMonth())
                 .orderBy(inventory.date.yearMonth().asc(), product.id.asc())
                 .distinct()
                 .transform(groupBy(product.id).list(
@@ -120,7 +119,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         return groupedProductMap.entrySet().stream()
                 .map(entry -> {
                     return MonthlyResponseDto.builder()
-                            .categoryName(entry.getValue().get(0).getCategoryName())
+                            .categoryName(Category.findByKey(entry.getValue().get(0).getCategoryName()).getName())
                             .productCode(entry.getValue().get(0).getProductCode())
                             .productName(entry.getKey())
                             .monthlyQuantityList(entry.getValue().stream()

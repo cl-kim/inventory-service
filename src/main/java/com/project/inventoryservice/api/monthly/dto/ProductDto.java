@@ -23,12 +23,12 @@ public class ProductDto {
     }
 
     public ProductDto(MonthlyInventory entity){
-        this.month = entity.getMonthlyDate().getMonthValue();
+        this.month = entity.getMonthlyDate().getYear()*100 + entity.getMonthlyDate().getMonthValue();
         this.quantity = entity.getQuantity();
     }
 
     public ProductDto(Inventory entity){
-        this.month = entity.getDate().getMonthValue();
+        this.month = entity.getDate().getYear()*100 + entity.getDate().getMonthValue();
         this.quantity = entity.getQuantity();
     }
 }

@@ -1,6 +1,7 @@
 package com.project.inventoryservice.domain.inventory;
 
 import com.project.inventoryservice.api.closing.dto.StockResponseDto;
+import com.project.inventoryservice.api.dashboard.dto.YearSummaryDto;
 import com.project.inventoryservice.api.inbound.dto.InBoundResponseDto;
 import com.project.inventoryservice.api.outbound.dto.OutBoundResponseDto;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,10 @@ public interface InventoryRepositoryCustom {
     List<OutBoundResponseDto> findOutBoundPage(Pageable pageable, Long productId, String categoryCode, LocalDate startDate, LocalDate endDate);
 
     List<StockResponseDto> findTotalInventory(String categoryCode, LocalDate date);
+
     List<StockResponseDto> findTotalInBound(String categoryCode, LocalDate date);
+
     List<StockResponseDto> findTotalOutBound(String categoryCode, LocalDate date);
+
+    YearSummaryDto findYearSummary(LocalDate date);
 }
