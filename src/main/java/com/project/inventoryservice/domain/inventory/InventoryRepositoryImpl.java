@@ -324,14 +324,19 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .fetch().stream().reduce(0, Integer::sum) * -1;
 
         // 당월 출고 제일 많은 제품명
-        String bestSeller = Objects.requireNonNull(jpaQueryFactory.select(
+        Tuple bestSellerTuple = jpaQueryFactory.select(
                         inventory.product.productName,
                         inventory.quantity.sum())
                 .from(inventory)
                 .where(formattedDate.eq(conditionDate), inventory.quantity.lt(0))
                 .groupBy(inventory.product)
                 .orderBy(inventory.quantity.sum().desc())
-                .fetchOne()).get(inventory.product.productName);
+                .fetchFirst();
+
+        String bestSeller = "";
+        if(bestSellerTuple != null){
+            bestSeller = bestSellerTuple.get(inventory.product.productName);
+        }
 
         return HotSummaryDto.builder()
                 .inventoryList(inventoryList)
