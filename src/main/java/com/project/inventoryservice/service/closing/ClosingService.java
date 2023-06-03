@@ -116,7 +116,7 @@ public class ClosingService {
         List<MonthlyInventory> saveList = new ArrayList<>();
 
         for (StockResponseDto inventory : inventoryList) {
-            Product product = productRepository.findByProductName(inventory.getProductName());
+            Product product = productRepository.findByProductCode(inventory.getProductCode());
             MonthlyInventory entity = MonthlyInventory.builder().product(product)
                     .monthlyDate(date)
                     .quantity(inventory.getQuantity())
