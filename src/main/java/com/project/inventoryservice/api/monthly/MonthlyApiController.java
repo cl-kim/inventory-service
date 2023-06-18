@@ -37,7 +37,12 @@ public class MonthlyApiController {
         LocalDate now = LocalDate.now();
         return monthlyService.findLiveOutBound(categoryCode, now);
     }
-
+    @Operation(summary = "단건 상품 재고 내역 조회", description = "현재 시점 특정 상품의 재고를 조회합니다.")
+    @GetMapping("/live/one-check")
+    public Integer findOneInventory(String productCode,
+                                    @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date){
+        return monthlyService.findOneInventory(productCode,date);
+    }
 
     @Operation(summary = "월별 재고 조회", description = "최근 12개월 간의 월별 재고를 조회합니다.")
     @GetMapping("/monthly/inventory")

@@ -7,6 +7,7 @@ import com.project.inventoryservice.api.dashboard.dto.ProductDto;
 import com.project.inventoryservice.api.dashboard.dto.YearSummaryDto;
 import com.project.inventoryservice.api.inbound.dto.InBoundResponseDto;
 import com.project.inventoryservice.api.outbound.dto.OutBoundResponseDto;
+import com.project.inventoryservice.domain.product.Product;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
@@ -139,7 +140,19 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .fetch();
     }
 
-    public List<InBoundResponseDto> findMonthStock(LocalDate date){
+    @Override
+    public Integer findOneInventory(Product product, LocalDate date) {
+        LocalDate startDate = date.withDayOfMonth(1);
+        Integer value = jpaQueryFactory
+                .select(inventory.quantity.sum())
+                .from(inventory)
+                .where(inventory.product.eq(product),
+                        inventory.date.between(startDate, date))
+                .fetchFirst();
+        return value == null ? 0 : value;
+    }
+
+    public List<InBoundResponseDto> findMonthStock(LocalDate date) {
         StringTemplate formattedDate = Expressions.stringTemplate(
                 "DATE_FORMAT({0},{1})", inventory.date, ConstantImpl.create("%y%m")
         );
