@@ -330,7 +330,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .from(inventory)
                 .where(formattedDate.eq(conditionDate), inventory.quantity.lt(0))
                 .groupBy(inventory.product)
-                .orderBy(inventory.quantity.sum().desc())
+                .orderBy(inventory.quantity.sum().asc())
                 .fetchFirst();
 
         String bestSeller = "";
