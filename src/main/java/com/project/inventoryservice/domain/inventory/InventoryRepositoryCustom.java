@@ -1,9 +1,12 @@
 package com.project.inventoryservice.domain.inventory;
 
 import com.project.inventoryservice.api.closing.dto.StockResponseDto;
+import com.project.inventoryservice.api.dashboard.dto.DaySummaryDto;
+import com.project.inventoryservice.api.dashboard.dto.HotSummaryDto;
 import com.project.inventoryservice.api.dashboard.dto.YearSummaryDto;
 import com.project.inventoryservice.api.inbound.dto.InBoundResponseDto;
 import com.project.inventoryservice.api.outbound.dto.OutBoundResponseDto;
+import com.project.inventoryservice.domain.product.Product;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
@@ -21,5 +24,11 @@ public interface InventoryRepositoryCustom {
 
     List<StockResponseDto> findTotalOutBound(String categoryCode, LocalDate date);
 
+    Integer findOneInventory(Product product, LocalDate localDate);
+
     YearSummaryDto findYearSummary(LocalDate date);
+
+    DaySummaryDto findDaySummary(LocalDate date);
+
+    HotSummaryDto findHotSummary(LocalDate date);
 }

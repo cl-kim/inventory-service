@@ -7,12 +7,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductDto {
 
-    private Integer month;
+    private Integer days;
 
     private Integer quantity;
 
-    public ProductDto(Integer month, Integer quantity) {
-        this.month = month;
-        this.quantity = quantity < 0 ? quantity * -1 : quantity;
+    public ProductDto(Integer days, Integer quantity) {
+        this.days = days;
+        if(quantity != null){
+            this.quantity = quantity < 0 ? quantity * -1 : quantity;
+        } else {
+            this.quantity = 0;
+        }
     }
 }

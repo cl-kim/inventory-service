@@ -31,6 +31,8 @@ public class OutBoundService {
 
     private final ClosingService closingService;
 
+    private final MonthlyService monthlyService;
+
     public Page<OutBoundResponseDto> getPage(Pageable pageable, Long productId, String categoryCode, LocalDate startDate, LocalDate endDate) {
         List<OutBoundResponseDto> results = inventoryRepository.findOutBoundPage(pageable, productId, categoryCode, startDate, endDate);
         long count = inventoryRepository.count();
@@ -43,6 +45,12 @@ public class OutBoundService {
         checkMonthlyEnd(requestDto.getOutBoundDate());
 
         Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
+
+        Integer stock = monthlyService.findOneInventory(product.getProductCode(), requestDto.getOutBoundDate());
+        if(stock < requestDto.getQuantity()){
+            throw new BusinessException(ErrorCode.BUSINESS_CUSTOM_MESSAGE, "출고량이 재고량을 초과합니다.");
+        }
+
         Inventory entity = inventoryRepository.save(requestDto.toEntity(product));
 
         return new OutBoundResponseDto(entity);
@@ -55,7 +63,7 @@ public class OutBoundService {
         Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(EntityNotFoundException::new);
         Inventory entity = findOutBound(outStockId);
 
-        entity.updateOutBound(product, requestDto.getQuantity(), requestDto.getOutBoundDate(),requestDto.getPrice(), requestDto.getCustomer(), requestDto.getMemo());
+        entity.updateOutBound(product, requestDto.getQuantity() * -1, requestDto.getOutBoundDate(),requestDto.getPrice(), requestDto.getCustomer(), requestDto.getMemo());
         return new OutBoundResponseDto(entity);
     }
 

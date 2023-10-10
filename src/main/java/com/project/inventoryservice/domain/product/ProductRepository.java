@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
     Long countByCategoryCode(String categoryCode);
 
-    Product findByProductName(String productName);
+    Product findByProductCode(String productCode);
 }

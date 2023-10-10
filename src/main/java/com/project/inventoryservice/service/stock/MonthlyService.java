@@ -35,7 +35,7 @@ public class MonthlyService {
         List<StockResponseDto> lastInventory = findMonthInventory(date.minusMonths(1L), categoryCode);
         List<StockResponseDto> sumList = inventoryRepository.findTotalInventory(categoryCode, date);
 
-        List<StockResponseDto> mergedList = Stream.concat(lastInventory.stream(), sumList.stream())
+        return Stream.concat(lastInventory.stream(), sumList.stream())
                 .collect(Collectors.groupingBy(dto -> dto.getProductCode() + dto.getProductName()))
                 .values().stream()
                 .map(groupedDtos -> {
@@ -44,8 +44,18 @@ public class MonthlyService {
                             groupedDtos.stream().mapToInt(StockResponseDto::getQuantity).sum());
                 })
                 .collect(Collectors.toList());
+    }
 
-        return mergedList;
+    /**
+     * 특정 시점의 한 상품의 재고 조회
+     */
+    public Integer findOneInventory(String productCode, LocalDate date) {
+        Product product = productRepository.findByProductCode(productCode);
+        LocalDate lastMonth = date.minusMonths(1).withDayOfMonth(date.minusMonths(1).lengthOfMonth());
+        Integer inventory = monthlyInventoryRepository.findLastMonthStock(product, lastMonth);// 기준월 전월 재고수량
+        Integer sumInventory = inventoryRepository.findOneInventory(product, date); // 기준월의 기준일 이전 총 합계 수량
+
+        return inventory + sumInventory;
     }
 
     public List<StockResponseDto> findLiveInBound(String categoryCode, LocalDate date) {
